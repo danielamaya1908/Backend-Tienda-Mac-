@@ -106,7 +106,7 @@ const postReview = require("../controllers/reviews/postReview");
 const putReview = require("../controllers/reviews/putReview");
 const getReview = require("../controllers/reviews/getReview");
 const getCategory = require("../controllers/product/getCategory");
-const getSubcategory = require("../controllers/product/getSubcategory");
+const getSubcategory = require("../controllers/product/getSubCategory");
 const PostRecoverPassword = require("../controllers/User/postRecoverPassword");
 const PostUpdatePassword = require("../controllers/User/postUpdatePassword");
 
