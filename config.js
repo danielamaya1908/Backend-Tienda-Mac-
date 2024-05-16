@@ -5,7 +5,8 @@ config();
 
 // Host local
 const HOST = "http://localhost:3005";
-const HOST_FRONT = "http://localhost:5173";
+//const HOST_FRONT = "http://localhost:5173";
+const HOST_FRONT = "http://localhost:3000";
 
 // Host Railway
 /* const HOST = "https://back-tiendamac.up.railway.app";
