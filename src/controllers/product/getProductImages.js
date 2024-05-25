@@ -1,5 +1,4 @@
 const { Image } = require("../../db");
-const path = require("path");
 
 const getProductImages = async (req, res) => {
   try {
@@ -14,14 +13,10 @@ const getProductImages = async (req, res) => {
       return res.status(404).json({ message: "No images found for the product" });
     }
 
-    // Construir la URL completa para cada imagen
     const imagePaths = images.map(image => {
-      // Utiliza la ruta base de la imagen en el servidor
-      const basePath = '/images/';
-      // Obtiene el nombre del archivo de la ruta completa
-      const fileName = path.basename(image.path);
-      // Retorna la URL completa de la imagen
-      return basePath + fileName;
+      // Obtener solo el nombre del archivo de la ruta completa
+      const fileName = image.path.split('/').pop();
+      return fileName;
     });
 
     res.status(200).json(imagePaths);
