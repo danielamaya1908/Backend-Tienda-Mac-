@@ -14,7 +14,8 @@ const postExcelImages = async (req, res) => {
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
-    const imageFolderPath = path.join(__dirname, 'ImagesProducts', 'AD5551LLLAAA555_4.jpg');
+    // Ruta relativa a la carpeta de imágenes
+    const imageFolderPath = path.join(__dirname, '..', '..', '..', 'ImagesProducts');
 
     for (const row of data) {
       const { itemId, image_name } = row;

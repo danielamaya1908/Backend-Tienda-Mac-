@@ -3,8 +3,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const multer = require("multer");
-const path = require('path');
+const path = require("path");
 
 const postExcelProducts = require("./controllers/product/postExcelProducts.js");
 require("./db.js");
@@ -26,7 +25,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/images', express.static(path.join(__dirname, 'ImagesProducts')));
+// Ruta relativa para servir imágenes estáticas
+const imagesPath = path.join(__dirname, 'ImagesProducts');
+app.use('/images', express.static(imagesPath));
 
 const upload = multer({ dest: "uploads/" });
 
