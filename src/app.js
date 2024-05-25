@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
+const path = require('path');
 
 const postExcelProducts = require("./controllers/product/postExcelProducts.js");
 require("./db.js");
@@ -25,7 +26,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/images', express.static('C:\\Users\\USER\\OneDrive\\Escritorio\\ImagesProducts'));
+app.use('/images', express.static(path.join(__dirname, 'ImagesProducts')));
 
 const upload = multer({ dest: "uploads/" });
 
