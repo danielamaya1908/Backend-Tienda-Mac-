@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const multer = require("multer");
 const path = require("path");
 
 const postExcelProducts = require("./controllers/product/postExcelProducts.js");
