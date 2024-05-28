@@ -27,8 +27,9 @@ app.use((req, res, next) => {
 });
 
 // Ruta relativa para servir imágenes estáticas
-const imagesPath = path.join(__dirname, 'ImagesProducts');
-app.use('/images', express.static(imagesPath));
+/* const imagesPath = path.join(__dirname, 'ImagesProducts'); */
+/* app.use('/images', express.static(imagesPath)); */
+app.use(express.static(path.join(__dirname, 'public')))
 
 const upload = multer({ dest: "uploads/" });
 
