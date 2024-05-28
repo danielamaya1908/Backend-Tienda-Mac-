@@ -5,20 +5,17 @@ const { Image, Product } = require("../../db");
 
 const postExcelImages = async (req, res) => {
   try {
-    if (!req.files || !req.files.file) {
+    if (!req.file) {
       return res.status(400).json({ message: "No Excel file uploaded" });
     }
 
-    const file = req.files.file[0];
-
-    // Procesar el archivo Excel
-    const workbook = xlsx.readFile(file.path);
+    const workbook = xlsx.readFile(req.file.path);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
     // Ruta relativa a la carpeta de imágenes
-    const imageFolderPath = path.join(__dirname, '..', '..', 'src', 'ImagesProducts');
+    const imageFolderPath = path.join(__dirname, '..', '..', 'ImagesProducts');
 
     for (const row of data) {
       const { itemId, image_name } = row;
@@ -29,15 +26,16 @@ const postExcelImages = async (req, res) => {
         const fullImagePath = path.join(imageFolderPath, image_name);
 
         if (fs.existsSync(fullImagePath)) {
-          const imageUrl = `${req.protocol}://${req.get("host")}/images/${image_name}`;
-          const imageRecord = await Image.create({
-            path: imageUrl,
+          const image = await Image.create({
+            path: fullImagePath,
             productId: product.id,
-            itemId: itemId,
+            itemId: itemId, // Agrega el itemId al crear la imagen
           });
 
-          console.log(`Image ${imageRecord.id} uploaded for product ${product.id}`);
-          await Product.update({ imageId: imageRecord.id }, { where: { id: product.id } });
+          console.log(`Image ${image.id} uploaded for product ${product.id}`);
+
+          // Actualizar el campo imageId del producto con el ID de la imagen
+          await Product.update({ imageId: image.id }, { where: { id: product.id } });
         } else {
           console.log(`Image file not found: ${fullImagePath}`);
         }
@@ -46,14 +44,14 @@ const postExcelImages = async (req, res) => {
       }
     }
 
-    res.status(200).json({ message: "Excel and images uploaded successfully" });
+    res.status(200).json({ message: "Images uploaded successfully" });
   } catch (error) {
-    console.error("Error uploading Excel and images:", error);
-    res.status(500).json({ message: "Error uploading Excel and images" });
+    console.error("Error uploading images:", error);
+    res.status(500).json({ message: "Error uploading images" });
   } finally {
-    // Eliminar el archivo Excel después de procesarlo
-    if (file) {
-      fs.unlinkSync(file.path);
+    // Elimina el archivo Excel después de procesarlo
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
     }
   }
 };
