@@ -6,7 +6,7 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
-const postExcelProducts = require("./controllers/product/postExcelProducts.js");
+const postExcelImages = require("./controllers/product/postExcelImages.js");
 require("./db.js");
 
 const app = express();
@@ -26,18 +26,31 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ruta relativa para servir imágenes estáticas
-/* const imagesPath = path.join(__dirname, 'ImagesProducts'); */
-/* app.use('/images', express.static(imagesPath)); */
-app.use(express.static(path.join(__dirname, 'public')))
+// Configuración de almacenamiento de Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      cb(null, "uploads/excels"); // Carpeta para los archivos Excel
+    } else {
+      cb(null, path.join(__dirname, 'src', 'ImagesProducts')); // Carpeta para las imágenes
+    }
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // Mantén el nombre original del archivo
+  },
+});
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage: storage });
 
-app.post("/postExcelProducts", upload.single("file"), (req, res, next) => {
-  console.log("Archivo recibido:", req.file);
-  console.log("Cuerpo de la solicitud:", req.body);
-  next();
-}, postExcelProducts);
+// Ruta para servir imágenes estáticas
+const imagesPath = path.join(__dirname, 'src', 'ImagesProducts');
+app.use('/images', express.static(imagesPath));
+
+// Ruta para cargar el archivo Excel y las imágenes
+app.post("/uploadExcelAndImages", upload.fields([
+  { name: 'file', maxCount: 1 },
+  { name: 'images', maxCount: 10 }
+]), postExcelImages);
 
 const routes = require("./routes/app.routes.js");
 app.use("/", routes);
