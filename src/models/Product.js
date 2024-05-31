@@ -105,10 +105,10 @@ module.exports = (sequelize) => {
         key: 'id'
       }
     },
-    isActive: {
+   /*  isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true, // Puedes establecer un valor predeterminado según tus necesidades
-    },    
+    },     */
   });
 
   console.log("Product model defined");

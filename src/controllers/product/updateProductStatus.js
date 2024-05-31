@@ -1,4 +1,4 @@
-const { Product } = require('../models');
+/* const { Product } = require('../models');
 
 const updateProductStatus = async (req, res) => {
   try {
@@ -21,4 +21,4 @@ const updateProductStatus = async (req, res) => {
   }
 };
 
-module.exports = updateProductStatus;
+module.exports = updateProductStatus; */
