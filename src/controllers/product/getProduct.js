@@ -26,7 +26,7 @@ const getProduct = async (req, res) => {
         },
         {
           model: Image,
-          attributes: ['id', 'path'], // Incluir los atributos que desees de Image
+          attributes: ['id', 'path'],
         },
       ],
     });
@@ -34,6 +34,7 @@ const getProduct = async (req, res) => {
     if (!products || products.length === 0) {
       return res.status(404).json({ message: "No products found" });
     }
+
     const formattedProducts = products.map((product) => {
       const {
         id,
@@ -52,7 +53,7 @@ const getProduct = async (req, res) => {
         Subcategory,
         Capacity,
         Color,
-        Image, // Incluir la relación con Image
+        Image,
       } = product;
     
       const { id: categoryId, name: categoryName } = Category;
@@ -61,8 +62,8 @@ const getProduct = async (req, res) => {
       const { id: capacityId, name: capacityName } = Capacity;
       const { id: colorId, name: colorName } = Color;
     
-      const imageId = Image ? Image.id : null; // Verificar si Image existe antes de acceder a su propiedad id
-      const imagePath = Image ? Image.path : null; // Verificar si Image existe antes de acceder a su propiedad path
+      const imageId = Image ? Image.id : null;
+      const imagePath = Image ? Image.path : null;
     
       return {
         id,
@@ -86,10 +87,11 @@ const getProduct = async (req, res) => {
         capacityName,
         colorId,
         colorName,
-        imageId, // Incluir el ID de la imagen en la respuesta
-        imagePath, // Incluir la ruta de la imagen en la respuesta
+        imageId,
+        imagePath,
       };
     });
+
     res.status(200).json(formattedProducts);
   } catch (error) {
     console.error("Error getting products:", error);
