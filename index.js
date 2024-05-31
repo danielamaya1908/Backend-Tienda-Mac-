@@ -6,7 +6,7 @@ const app = require("./src/app");
 //const PORT = process.env.PORT;
 const { PORT, FRONTEND_URL } = require('./config');
 sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(() => {
     console.log("Sequelize synced successfully"); // Agrega este console.log
     app.listen(PORT, () => {

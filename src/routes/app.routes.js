@@ -16,6 +16,7 @@ const getAllConditions = require("../controllers/Condition/getAllCondition");
 const postCondition  = require("../controllers/Condition/postCondition");
 const deleteCondition  = require("../controllers/Condition/deleteCondition");
 const putConditionByID  = require("../controllers/Condition/updateCondition");
+const updateProductStatus = require('../controllers/product/updateProductStatus');
 
 const multer = require('multer');
 
@@ -158,6 +159,8 @@ router.post("/condition", postCondition);
 router.get("/condition", getAllConditions);
 router.delete('/condition/:id', deleteCondition);
 router.put('/condition/:id', putConditionByID);
+
+router.put('/products/:id/status', updateProductStatus);
 
 // Rutas de Usuarios
 router.post("/userRegister", postRegister);
