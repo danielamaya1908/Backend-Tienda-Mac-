@@ -43,6 +43,7 @@ const {
   Colors,
   Subcategories,
   Capacities,
+  Condition,
 } = sequelize.models;
 
 
@@ -126,6 +127,9 @@ Colors.belongsTo(Category, { foreignKey: 'categoryId' });
 
 Category.hasMany(Capacities, { foreignKey: 'categoryId' });
 Capacities.belongsTo(Category, { foreignKey: 'categoryId' });
+
+Product.belongsTo(Condition, { foreignKey: 'conditionId' });
+Condition.hasMany(Product, { foreignKey: 'conditionId' });
 
 // En tu configuración donde defines las relaciones:
  // Esto indica que un Color puede tener muchos Products.

@@ -97,6 +97,14 @@ module.exports = (sequelize) => {
         key: "id",
       },
     },
+    conditionId: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // o true, dependiendo de tus necesidades
+      references: {
+        model: 'Conditions',
+        key: 'id'
+      }
+    }    
   });
 
   console.log("Product model defined");

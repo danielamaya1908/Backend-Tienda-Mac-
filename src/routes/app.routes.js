@@ -12,6 +12,10 @@ const postExcelProducts = require('../controllers/product/postExcelProducts');
 const postExcelImages = require('../controllers/product/postExcelImages');
 const getProductImages = require("../controllers/product/getProductImages");
 /* const postProductImages = require("../controllers/product/postProductImages"); */
+const getAllConditions = require("../controllers/Condition/getAllCondition");
+const postCondition  = require("../controllers/Condition/postCondition");
+const deleteCondition  = require("../controllers/Condition/deleteCondition");
+const putConditionByID  = require("../controllers/Condition/updateCondition");
 
 const multer = require('multer');
 
@@ -150,6 +154,10 @@ router.put("/product/:id", putProductbyID);
 router.get("/products/:productId/images", getProductImages);
 /* router.post("/products/:productId/images", upload.array('images'), postProductImages); */
 
+router.post("/condition", postCondition);
+router.get("/condition", getAllConditions);
+router.delete('/condition/:id', deleteCondition);
+router.put('/condition/:id', putConditionByID);
 
 // Rutas de Usuarios
 router.post("/userRegister", postRegister);

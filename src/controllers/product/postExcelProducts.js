@@ -1,6 +1,6 @@
 const fs = require("fs");
 const xlsx = require("xlsx");
-const { Product, Category, Brand, Colors, Capacities, Subcategories } = require("../../db");
+const { Product, Category, Brand, Colors, Capacities, Subcategories, Condition } = require("../../db");
 
 const postExcelProductsProducts = async (req, res) => {
   try {
@@ -32,6 +32,7 @@ const postExcelProductsProducts = async (req, res) => {
         brand,
         capacity,
         color,
+        condition,
       } = row;
 
       // Verificar si ya existe un producto con el mismo itemId
@@ -40,7 +41,6 @@ const postExcelProductsProducts = async (req, res) => {
         console.log("Product with itemId already exists:", itemId);
         continue;
       }
-      
 
       // Buscar la instancia de Category utilizando el nombre proporcionado en el archivo Excel
       const categoryInstance = await Category.findOne({ where: { name: category } });
@@ -77,6 +77,13 @@ const postExcelProductsProducts = async (req, res) => {
         continue;
       }
 
+      // Buscar la instancia de Condition utilizando el nombre proporcionado en el archivo Excel
+      const conditionInstance = await Condition.findOne({ where: { name: condition } });
+      if (!conditionInstance) {
+        console.log("Condition not found:", condition);
+        continue;
+      }
+
       // Crear el nuevo producto utilizando los IDs de las instancias relacionadas
       const newProduct = await Product.create({
         itemId,
@@ -94,6 +101,7 @@ const postExcelProductsProducts = async (req, res) => {
         colorId: colorInstance.id,
         capacityId: capacityInstance.id,
         subcategoryId: subcategoryInstance.id,
+        conditionId: conditionInstance.id,
       });
 
       createdProducts.push(newProduct);
