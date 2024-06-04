@@ -2,6 +2,13 @@ const fs = require("fs");
 const xlsx = require("xlsx");
 const { Product, Category, Brand, Colors, Capacities, Subcategories, Condition } = require("../../db");
 
+const trimProperty = (value) => {
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+  return value;
+};
+
 const postExcelProductsProducts = async (req, res) => {
   try {
     if (!req.file) {
@@ -27,13 +34,27 @@ const postExcelProductsProducts = async (req, res) => {
         currency,
         tax,
         barcode,
-        category,
-        subcategory,
-        brand,
-        capacity,
-        color,
-        condition,
+        category = '',
+        subcategory = '',
+        brand = '',
+        capacity = '',
+        color = '',
+        condition = '',
       } = row;
+
+      // Eliminar espacios en blanco al inicio y al final de los valores
+      const trimmedCategory = trimProperty(category);
+      const trimmedSubcategory = trimProperty(subcategory);
+      const trimmedBrand = trimProperty(brand);
+      const trimmedCapacity = trimProperty(capacity);
+      const trimmedColor = trimProperty(color);
+      const trimmedCondition = trimProperty(condition);
+
+      // Verificar si las propiedades están presentes en el objeto `row`
+      if (!trimmedCategory || !trimmedSubcategory || !trimmedBrand || !trimmedCapacity || !trimmedColor || !trimmedCondition) {
+        console.log('Fila con datos faltantes:', row);
+        continue;
+      }
 
       // Verificar si ya existe un producto con el mismo itemId
       const existingProductById = await Product.findOne({ where: { itemId } });
@@ -43,44 +64,44 @@ const postExcelProductsProducts = async (req, res) => {
       }
 
       // Buscar la instancia de Category utilizando el nombre proporcionado en el archivo Excel
-      const categoryInstance = await Category.findOne({ where: { name: category } });
+      const categoryInstance = await Category.findOne({ where: { name: trimmedCategory } });
       if (!categoryInstance) {
-        console.log("Category not found:", category);
+        console.log("Category not found:", trimmedCategory);
         continue;
       }
 
       // Buscar la instancia de Brand utilizando el nombre proporcionado en el archivo Excel
-      const brandInstance = await Brand.findOne({ where: { name: brand } });
+      const brandInstance = await Brand.findOne({ where: { name: trimmedBrand } });
       if (!brandInstance) {
-        console.log("Brand not found:", brand);
+        console.log("Brand not found:", trimmedBrand);
         continue;
       }
 
       // Buscar la instancia de Colors utilizando el nombre proporcionado en el archivo Excel
-      const colorInstance = await Colors.findOne({ where: { name: color } });
+      const colorInstance = await Colors.findOne({ where: { name: trimmedColor } });
       if (!colorInstance) {
-        console.log("Color not found:", color);
+        console.log("Color not found:", trimmedColor);
         continue;
       }
 
       // Buscar la instancia de Capacities utilizando el nombre proporcionado en el archivo Excel
-      const capacityInstance = await Capacities.findOne({ where: { name: capacity } });
+      const capacityInstance = await Capacities.findOne({ where: { name: trimmedCapacity } });
       if (!capacityInstance) {
-        console.log("Capacity not found:", capacity);
+        console.log("Capacity not found:", trimmedCapacity);
         continue;
       }
 
       // Buscar la instancia de Subcategories utilizando el nombre proporcionado en el archivo Excel
-      const subcategoryInstance = await Subcategories.findOne({ where: { name: subcategory } });
+      const subcategoryInstance = await Subcategories.findOne({ where: { name: trimmedSubcategory } });
       if (!subcategoryInstance) {
-        console.log("Subcategory not found:", subcategory);
+        console.log("Subcategory not found:", trimmedSubcategory);
         continue;
       }
 
       // Buscar la instancia de Condition utilizando el nombre proporcionado en el archivo Excel
-      const conditionInstance = await Condition.findOne({ where: { name: condition } });
+      const conditionInstance = await Condition.findOne({ where: { name: trimmedCondition } });
       if (!conditionInstance) {
-        console.log("Condition not found:", condition);
+        console.log("Condition not found:", trimmedCondition);
         continue;
       }
 
