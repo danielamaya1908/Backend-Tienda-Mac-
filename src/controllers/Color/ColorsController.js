@@ -22,12 +22,19 @@ const createColor = async (req, res) => {
   }
 };
 
-const getAllColors  = async (req, res) => {
+const getAllColors = async (req, res) => {
   try {
-    const colors = await Colors .findAll({
-      include: [Category] // Optional: Include the Category details
+    const colors = await Colors.findAll({
+      include: [Category], // Include the Category details
     });
-    res.status(200).json(colors);
+
+    // Aquí puedes acceder al nombre de la categoría para cada color
+    const colorsWithCategoryName = colors.map(color => {
+      const categoryName = color.Category.name;
+      return { ...color.toJSON(), categoryName };
+    });
+
+    res.status(200).json(colorsWithCategoryName);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error retrieving colors" });
@@ -37,15 +44,18 @@ const getAllColors  = async (req, res) => {
 const getColorById = async (req, res) => {
   try {
     const { id } = req.params;
-    const color = await Colors .findByPk(id, {
-      include: [Category] // Optional: Include the Category details
+    const color = await Colors.findByPk(id, {
+      include: [Category], // Include the Category details
     });
 
     if (!color) {
       return res.status(404).json({ message: "Color not found" });
     }
 
-    res.status(200).json(color);
+    // Aquí puedes acceder al nombre de la categoría para el color
+    const categoryName = color.Category.name;
+
+    res.status(200).json({ ...color.toJSON(), categoryName });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error retrieving color" });

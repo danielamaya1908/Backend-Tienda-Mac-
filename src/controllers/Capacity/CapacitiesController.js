@@ -15,7 +15,10 @@ const createCapacity = async (req, res) => {
     }
 
     const capacity = await Capacities.create({ name, categoryId });
-    return res.status(201).json(capacity);
+    const capacityWithCategory = await Capacities.findByPk(capacity.id, {
+      include: [Category]
+    });
+    return res.status(201).json(capacityWithCategory);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -25,7 +28,7 @@ const createCapacity = async (req, res) => {
 const getAllCapacities = async (req, res) => {
   try {
     const capacities = await Capacities.findAll({
-      include: [Category] // Optional: Include the Category details
+      include: [Category]
     });
     res.status(200).json(capacities);
   } catch (error) {
@@ -38,7 +41,7 @@ const getCapacityById = async (req, res) => {
   try {
     const { id } = req.params;
     const capacity = await Capacities.findByPk(id, {
-      include: [Category] // Optional: Include the Category details
+      include: [Category]
     });
 
     if (!capacity) {
@@ -74,7 +77,11 @@ const updateCapacity = async (req, res) => {
     capacity.name = name;
     await capacity.save();
 
-    res.status(200).json({ message: "Capacity updated", capacity });
+    const updatedCapacity = await Capacities.findByPk(capacity.id, {
+      include: [Category]
+    });
+
+    res.status(200).json(updatedCapacity);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating capacity" });
