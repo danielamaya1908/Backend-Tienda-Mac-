@@ -26,16 +26,28 @@ const postExcelImages = async (req, res) => {
         const fullImagePath = path.join(imageFolderPath, image_name);
 
         if (fs.existsSync(fullImagePath)) {
-          const image = await Image.create({
-            path: fullImagePath,
-            productId: product.id,
-            itemId: itemId, // Agrega el itemId al crear la imagen
+          // Verificar si ya existe una imagen con el mismo nombre para el producto
+          const existingImage = await Image.findOne({
+            where: {
+              path: fullImagePath,
+              productId: product.id
+            }
           });
 
-          console.log(`Image ${image.id} uploaded for product ${product.id}`);
+          if (!existingImage) {
+            const image = await Image.create({
+              path: fullImagePath,
+              productId: product.id,
+              itemId: itemId, // Agrega el itemId al crear la imagen
+            });
 
-          // Actualizar el campo imageId del producto con el ID de la imagen
-          await Product.update({ imageId: image.id }, { where: { id: product.id } });
+            console.log(`Image ${image.id} uploaded for product ${product.id}`);
+
+            // Actualizar el campo imageId del producto con el ID de la imagen
+            await Product.update({ imageId: image.id }, { where: { id: product.id } });
+          } else {
+            console.log(`Image already exists for product ${product.id}: ${image_name}`);
+          }
         } else {
           console.log(`Image file not found: ${fullImagePath}`);
         }
