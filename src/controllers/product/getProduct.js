@@ -1,8 +1,12 @@
-const { Product, Category, Brand, Subcategories, Capacities, Colors, Image } = require("../../db");
+const { Product, Category, Brand, Subcategory, Capacity, Color, Image } = require("../../db");
 
 const getProduct = async (req, res) => {
   try {
-    const products = await Product.findAll({
+    const page = req.query.page || 1;
+    const limit = 10; // Cantidad de productos por página
+    const offset = (page - 1) * limit;
+
+    const products = await Product.findAndCountAll({
       include: [
         {
           model: Category,
@@ -13,15 +17,15 @@ const getProduct = async (req, res) => {
           attributes: ['id', 'name'],
         },
         {
-          model: Subcategories,
+          model: Subcategory,
           attributes: ['id', 'name'],
         },
         {
-          model: Capacities,
+          model: Capacity,
           attributes: ['id', 'name'],
         },
         {
-          model: Colors,
+          model: Color,
           attributes: ['id', 'name'],
         },
         {
@@ -29,13 +33,15 @@ const getProduct = async (req, res) => {
           attributes: ['id', 'path'],
         },
       ],
+      limit,
+      offset,
     });
 
-    if (!products || products.length === 0) {
+    if (!products || products.count === 0) {
       return res.status(404).json({ message: "No products found" });
     }
 
-    const formattedProducts = products.map((product) => {
+    const formattedProducts = products.rows.map((product) => {
       const {
         id,
         itemId,
@@ -55,16 +61,16 @@ const getProduct = async (req, res) => {
         Color,
         Image,
       } = product;
-    
+
       const { id: categoryId, name: categoryName } = Category;
       const { id: brandId, name: brandName } = Brand;
       const { id: subcategoryId, name: subcategoryName } = Subcategory;
       const { id: capacityId, name: capacityName } = Capacity;
       const { id: colorId, name: colorName } = Color;
-    
+
       const imageId = Image ? Image.id : null;
       const imagePath = Image ? Image.path : null;
-    
+
       return {
         id,
         itemId,
@@ -92,7 +98,7 @@ const getProduct = async (req, res) => {
       };
     });
 
-    res.status(200).json(formattedProducts);
+    res.status(200).json({ totalItems: products.count, totalPages: Math.ceil(products.count / limit), products: formattedProducts });
   } catch (error) {
     console.error("Error getting products:", error);
     res.status(500).json({ message: "Error getting products" });
