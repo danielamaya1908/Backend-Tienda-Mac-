@@ -17,7 +17,7 @@ const postCondition  = require("../controllers/Condition/postCondition");
 const deleteCondition  = require("../controllers/Condition/deleteCondition");
 const putConditionByID  = require("../controllers/Condition/updateCondition");
 /* const updateProductStatus = require('../controllers/product/updateProductStatus'); */
-
+const deleteAllImages = require("../controllers/product/deleteAllImages");
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -36,6 +36,8 @@ router.post('/postExcelProducts', upload.single('file'), postExcelProducts);
 
 // Ruta para subir imágenes desde archivo Excel
 router.post('/postExcelImages', upload.single('file'), postExcelImages);
+
+router.delete("/delete-all-images", deleteAllImages);
 
 const postLogin = require("../controllers/User/postLogin");
 const PostRegisterGoogle = require("../controllers/User/postRegisterGoogle");
