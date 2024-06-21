@@ -1,10 +1,12 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
 const xlsx = require("xlsx");
 const { Image, Product } = require("../../db");
 
 const postExcelImages = async (req, res) => {
   try {
+    console.log("Current working directory:", process.cwd());
+    
     if (!req.file) {
       return res.status(400).json({ message: "No Excel file uploaded" });
     }
@@ -15,10 +17,16 @@ const postExcelImages = async (req, res) => {
     const data = xlsx.utils.sheet_to_json(worksheet);
 
     // Ruta relativa a la carpeta de imágenes
-    const imageFolderPath = path.join(__dirname, '..', '..', 'ImagesProducts');
+    const imageFolderPath = process.env.IMAGE_FOLDER_PATH || path.join(process.cwd(), 'src', 'ImagesProducts');
 
     console.log("Ruta de la carpeta de imágenes:", imageFolderPath);
-    console.log("Contenido de la carpeta:", fs.readdirSync(imageFolderPath));
+    
+    try {
+      const folderContents = await fs.readdir(imageFolderPath);
+      console.log("Contenido de la carpeta:", folderContents);
+    } catch (error) {
+      console.error("Error al leer el contenido de la carpeta de imágenes:", error);
+    }
 
     for (const row of data) {
       const { itemId, image_name } = row;
@@ -30,7 +38,7 @@ const postExcelImages = async (req, res) => {
         console.log("Intentando acceder a la imagen:", fullImagePath);
 
         try {
-          await fs.promises.access(fullImagePath);
+          await fs.access(fullImagePath);
           
           // Verificar si ya existe una imagen con el mismo nombre para el producto
           const existingImage = await Image.findOne({
@@ -44,7 +52,7 @@ const postExcelImages = async (req, res) => {
             const image = await Image.create({
               path: fullImagePath,
               productId: product.id,
-              itemId: itemId, // Agrega el itemId al crear la imagen
+              itemId: itemId,
             });
 
             console.log(`Image ${image.id} uploaded for product ${product.id}`);
@@ -70,7 +78,7 @@ const postExcelImages = async (req, res) => {
   } finally {
     // Elimina el archivo Excel después de procesarlo
     if (req.file) {
-      fs.unlinkSync(req.file.path);
+      await fs.unlink(req.file.path).catch(console.error);
     }
   }
 };
