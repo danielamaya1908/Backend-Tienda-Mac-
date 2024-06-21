@@ -15,7 +15,10 @@ const postExcelImages = async (req, res) => {
     const data = xlsx.utils.sheet_to_json(worksheet);
 
     // Ruta relativa a la carpeta de imágenes
-    const imageFolderPath = path.join(__dirname, '..', 'ImagesProducts');
+    const imageFolderPath = path.join(__dirname, '..', '..', 'ImagesProducts');
+
+    console.log("Ruta de la carpeta de imágenes:", imageFolderPath);
+    console.log("Contenido de la carpeta:", fs.readdirSync(imageFolderPath));
 
     for (const row of data) {
       const { itemId, image_name } = row;
@@ -24,8 +27,11 @@ const postExcelImages = async (req, res) => {
 
       if (product) {
         const fullImagePath = path.join(imageFolderPath, image_name);
+        console.log("Intentando acceder a la imagen:", fullImagePath);
 
-        if (fs.existsSync(fullImagePath)) {
+        try {
+          await fs.promises.access(fullImagePath);
+          
           // Verificar si ya existe una imagen con el mismo nombre para el producto
           const existingImage = await Image.findOne({
             where: {
@@ -48,8 +54,9 @@ const postExcelImages = async (req, res) => {
           } else {
             console.log(`Image already exists for product ${product.id}: ${image_name}`);
           }
-        } else {
-          console.log(`Image file not found: ${fullImagePath}`);
+        } catch (error) {
+          console.log(`Image file not found or inaccessible: ${fullImagePath}`);
+          console.error(error);
         }
       } else {
         console.log(`Product not found with itemId: ${itemId}`);
