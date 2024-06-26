@@ -35,7 +35,6 @@ const postExcelImages = async (req, res) => {
 
       if (product) {
         const fullImagePath = path.join(imageFolderPath, image_name);
-        console.log("Intentando acceder a la imagen:", fullImagePath);
 
         try {
           await fs.access(fullImagePath);
