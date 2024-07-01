@@ -16,8 +16,12 @@ const getAllConditions = require("../controllers/Condition/getAllCondition");
 const postCondition  = require("../controllers/Condition/postCondition");
 const deleteCondition  = require("../controllers/Condition/deleteCondition");
 const putConditionByID  = require("../controllers/Condition/updateCondition");
-/* const updateProductStatus = require('../controllers/product/updateProductStatus'); */
-const deleteAllImages = require("../controllers/product/deleteAllImages");
+const updateProductStatus = require('../controllers/product/updateProductStatus');
+const getProductByCategoryAndSubcategory = require('../controllers/product/getProductByCategoryAndSubcategory');
+const getProductByCategorySubcategoryAndProductName = require('../controllers/product/getProductByCategorySubcategoryAndName');
+const getProductByItemId  = require('../controllers/product/getProductByItemId');
+const getRecentProducts = require('../controllers/product/getRecentProducts');
+
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -36,8 +40,6 @@ router.post('/postExcelProducts', upload.single('file'), postExcelProducts);
 
 // Ruta para subir imágenes desde archivo Excel
 router.post('/postExcelImages', upload.single('file'), postExcelImages);
-
-router.delete("/delete-all-images", deleteAllImages);
 
 const postLogin = require("../controllers/User/postLogin");
 const PostRegisterGoogle = require("../controllers/User/postRegisterGoogle");
@@ -161,8 +163,8 @@ router.post("/condition", postCondition);
 router.get("/condition", getAllConditions);
 router.delete('/condition/:id', deleteCondition);
 router.put('/condition/:id', putConditionByID);
-/* 
-router.put('/products/:id/status', updateProductStatus); */
+
+router.put('/product/:id/status', updateProductStatus);
 
 // Rutas de Usuarios
 router.post("/userRegister", postRegister);
@@ -214,6 +216,10 @@ router.get("/colors", getAllColors);
 router.get("/color/:id", getColorById);
 router.put("/color/:id", updateColor);
 router.delete("/color/:id", deleteColor);
+router.get('/products/category/:category/subcategory/:subcategory', getProductByCategoryAndSubcategory);
+router.get('/products/category/:category/subcategory/:subcategory/name/:name', getProductByCategorySubcategoryAndProductName);
+router.get('/products/category/:category/subcategory/:subcategory/item/:itemId', getProductByItemId);
+router.get('/products/recent', getRecentProducts);
 
 // Rutas de Favoritos
 router.post("/postFavorite", postFavorite);
