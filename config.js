@@ -5,8 +5,7 @@ config();
 
 // Host local
 const HOST = "http://localhost:3005";
-//const HOST_FRONT = "http://localhost:5173";
-const FRONTEND_URL = "https://frontend-tienda-mac.up.railway.app"; 
+const HOST_FRONT = "http://localhost:5173";
 
 // Host Railway
 /* const HOST = "https://back-tiendamac.up.railway.app";
@@ -38,5 +37,5 @@ module.exports = {
   PAYPAL_CLIENT,
   PAYPAL_SECRET_KEY,
   HOST,
-  FRONTEND_URL,
+  HOST_FRONT,
 };
