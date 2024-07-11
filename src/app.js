@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
-const path = require("path");
+const authRoutes = require('./routes/auth.js');
 const postExcelProducts = require("./controllers/product/postExcelProducts.js");
 require("./db.js");
 
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(morgan("dev"));
-
+app.use('/auth', authRoutes);
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -25,9 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ruta relativa para servir imágenes estáticas
-const imagesPath = path.join(__dirname, 'ImagesProducts');
-app.use('/images', express.static(imagesPath));
+app.use('/images', express.static('C:\\Users\\USER\\OneDrive\\Escritorio\\Tienda-Mac\\ImagesProducts'));
 
 const upload = multer({ dest: "uploads/" });
 

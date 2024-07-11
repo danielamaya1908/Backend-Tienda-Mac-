@@ -45,7 +45,7 @@ router.delete("/delete-all-images", deleteAllImages);
 
 const postLogin = require("../controllers/User/postLogin");
 const PostRegisterGoogle = require("../controllers/User/postRegisterGoogle");
-const getUser = require("../controllers/User/getUser");
+/* const getUser = require("../controllers/User/getUser"); */
 const getAllUsers = require("../controllers/User/getAllUser");
 const { createUserAdmin, validateUserAdmin, updateUserAdmin, deleteUserAdmin, getAllUserAdmins } = require("../controllers/User/createUserAdmin");
 const {  
@@ -94,7 +94,7 @@ const putUserById = require("../controllers/User/putUserById");
 const getProperty = require("../controllers/product/getProperty");
 
 const getDiscountProducts = require("../controllers/product/getDiscountProducts");
-const getUserByEmail = require("../controllers/User/getUserByEmail");
+/* const getUserByEmail = require("../controllers/User/getUserByEmail"); */
 const postFavorite = require("../controllers/User/postFavorite");
 const deleteFavorite = require("../controllers/User/deleteFavorite");
 const getAllFavorites = require("../controllers/User/getAllFavorites");
@@ -125,7 +125,7 @@ const postShoppingProduct = require("../controllers/Cart/postShoppingProduct");
 const putShoppingProduct = require("../controllers/Cart/putShoppingProduct");
 const deleteShoppingProduct = require("../controllers/Cart/deleteShoppingProduct");
 const putAllCart = require("../controllers/Cart/putAllCart");
-const getUserCart = require("../controllers/Cart/getUserCart");
+/* const getUserCart = require("../controllers/Cart/getUserCart"); */
 
 const postOrder = require("../controllers/Order/postOrder");
 const captureUserOrder = require("../controllers/Order/captureUserOrder");
@@ -138,7 +138,7 @@ router.post("/postShoppingProduct", postShoppingProduct);
 router.put("/putShoppingProduct", putShoppingProduct);
 router.put("/putAllCart", putAllCart);
 router.delete("/deleteShoppingProduct", deleteShoppingProduct);
-router.get("/getUserCart", getUserCart);
+/* router.get("/getUserCart", getUserCart); */
 
 // Nuevas órdenes
 router.post("/postOrder", postOrder);
@@ -195,8 +195,8 @@ router.delete("/deleteBrand/:id", deleteBrand);
 router.put("/user/:id", putUserById);
 router.put("/user/:id/password", putPassword);
 
-router.get("/user/:id", getUser);
-router.get("/user", getUserByEmail);
+/* router.get("/user/:id", getUser);
+router.get("/user", getUserByEmail); */
 router.get("/users", getAllUsers);
 router.get("/purchases/:id", getAllPurchases);
 
