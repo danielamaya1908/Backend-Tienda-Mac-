@@ -55,6 +55,34 @@ const {
   updateCapacity,
   deleteCapacity,} = require('../controllers/Capacity/CapacitiesController');
 
+  const {
+    createPurchase,
+    getAllPurchases,
+    getPurchaseById,
+    updatePurchase,
+    deletePurchase
+  } = require('../controllers/Purchase/purchaseController');
+  
+  // Ruta para crear una nueva compra
+  router.post('/purchase', createPurchase);
+  
+  // Ruta para obtener todas las compras
+  router.get('/adminpurchases', getAllPurchases);
+  
+  // Ruta para obtener una compra por ID
+  router.get('/purchase/:id', getPurchaseById);
+  
+  // Ruta para actualizar una compra por ID
+  router.put('/purchase/:id', updatePurchase);
+  
+  // Ruta para eliminar una compra por ID
+  router.delete('/purchase/:id', deletePurchase);
+
+  const { getPurchasesByUserId } = require('../controllers/Purchase/userPurchasesController');
+
+// Ruta para obtener todas las compras de un usuario específico
+router.get('/user-purchases/user/:userId', getPurchasesByUserId);
+
 const {
     createCategory,
     getAllCategories,
