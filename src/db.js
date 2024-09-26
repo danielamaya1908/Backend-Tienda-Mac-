@@ -46,6 +46,7 @@ const {
   Condition,
   SoporteTecnico,
   ImageSoporteTecnico,
+  ImageEstado,
 } = sequelize.models;
 
 
@@ -119,6 +120,8 @@ SoporteTecnico.belongsTo(User, { foreignKey: 'userId' });
 SoporteTecnico.hasMany(ImageSoporteTecnico, { foreignKey: 'soporteTecnicoId' });
 ImageSoporteTecnico.belongsTo(SoporteTecnico, { foreignKey: 'soporteTecnicoId' });
 
+SoporteTecnico.hasMany(ImageEstado, { foreignKey: 'soporteTecnicoId' });
+ImageEstado.belongsTo(SoporteTecnico, { foreignKey: 'soporteTecnicoId' });
 
 Product.belongsTo(Brand, { foreignKey: "brandId" });
 Brand.hasMany(Product, { foreignKey: "brandId" });
