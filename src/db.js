@@ -44,6 +44,9 @@ const {
   Subcategories,
   Capacities,
   Condition,
+  SoporteTecnico,
+  ImageSoporteTecnico,
+  ImageEstado,
 } = sequelize.models;
 
 
@@ -56,7 +59,6 @@ Transaction.belongsTo(Order, {
   foreignKey: "order_id",
   targetKey: "id",
 });
-
 
 //relaciono la tabla Storage con la tabla stock
 Storage.belongsToMany(Product, { through: Stock });
@@ -100,8 +102,17 @@ Stock.belongsTo(Storage, { foreignKey: "StorageId" });
 
 
 // Relación entre Purchase y User, crea una tabla intermedia que funciona como carrito (UserPurchaseCart_product)
-User.belongsToMany(Purchase, { through: "User_purchaseCart" });
-Purchase.belongsToMany(User, { through: "User_purchaseCart" });
+/* User.belongsToMany(Purchase, { through: "User_purchaseCart" });
+Purchase.belongsToMany(User, { through: "User_purchaseCart" }); */
+
+/* User.belongsToMany(Purchase, { through: "userdId" });
+Purchase.belongsToMany(User, { through: "purchaseId" }); */
+
+Purchase.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Purchase, { foreignKey: "userId" });
+
+Purchase.belongsTo(Product, { foreignKey: 'productId' });
+Product.hasMany(Purchase, { foreignKey: 'productId' });
 
 Product.belongsTo(Category, { foreignKey: "categoryId" });
 Category.hasMany(Product, { foreignKey: "categoryId" });
@@ -121,6 +132,17 @@ Subcategories.hasMany(Product, { foreignKey: "subcategoryId" });
 
 Category.hasMany(Subcategories, { foreignKey: 'categoryId' });
 Subcategories.belongsTo(Category, { foreignKey: 'categoryId' });
+
+User.hasMany(SoporteTecnico, { foreignKey: 'userId' });
+SoporteTecnico.belongsTo(User, { foreignKey: 'userId' });
+
+// Relación entre SoporteTecnico e ImageSoporteTecnico
+// En tu archivo de asociaciones (e.g., `associations.js` o similar)
+SoporteTecnico.hasMany(ImageSoporteTecnico, { foreignKey: 'soporteTecnicoId' });
+ImageSoporteTecnico.belongsTo(SoporteTecnico, { foreignKey: 'soporteTecnicoId' });
+
+SoporteTecnico.hasMany(ImageEstado, { foreignKey: 'soporteTecnicoId' });
+ImageEstado.belongsTo(SoporteTecnico, { foreignKey: 'soporteTecnicoId' });
 
 Category.hasMany(Colors, { foreignKey: 'categoryId' });
 Colors.belongsTo(Category, { foreignKey: 'categoryId' });

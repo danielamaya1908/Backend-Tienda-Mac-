@@ -1,60 +1,55 @@
+// models/Purchase.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Purchase = sequelize.define('Purchase', {
-        // Campos para representar los productos en el carrito
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
+  sequelize.define(
+    'Purchase',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      amount: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      currency: {
+        type: DataTypes.STRING(10),
+        defaultValue: 'COP',
+      },
+      description: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      payment_method: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      customer_name: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      customer_email: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        validate: {
+          isEmail: true,
         },
-        title: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        description: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        price: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        discount: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        brand: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        gender: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        category: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        subCategory: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        available: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true,
-        },
-        // Información del carrito
-        quantity: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        // Estado del carrito
-        status: {
-            type: DataTypes.ENUM('pendiente', 'completed', 'failed'),
-            defaultValue: 'pendiente',
-        },
-    }, { timestamps: true });
-
-    return Purchase;
+      },
+      reference: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      charge_id: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+    },
+    { timestamps: true }
+  );
 };

@@ -9,6 +9,11 @@ module.exports = (sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      documentNumber: { // Nuevo campo para el número de documento
+        type: DataTypes.STRING(50),
+        allowNull: true, // No permitir NULL
+        unique: true,  // Asegura que cada documento sea único
+      },
       externalSignIn: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
@@ -33,7 +38,7 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       phoneNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(255),
         allowNull: true,
       },
       address: {
@@ -54,7 +59,7 @@ module.exports = (sequelize) => {
       },
       email: {
         type: DataTypes.STRING(255),
-        unique: false,
+        unique: true, // Cambiado a único para evitar duplicados
         allowNull: false,
         validate: {
           isEmail: true,
@@ -65,9 +70,9 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       rol: {
-        type: DataTypes.ENUM('client', 'admin', 'super_admin'),
+        type: DataTypes.ENUM("client", "admin", "super_admin"),
         allowNull: true,
-        defaultValue: 'client',
+        defaultValue: "client",
       },
       image: {
         type: DataTypes.STRING(255),

@@ -6,7 +6,7 @@ const getProduct = require("../controllers/product/getProduct");
 const getProductOrderBy = require("../controllers/product/getProductOrderBy");
 const deleteProductByPk = require("../controllers/product/deleteProductByPk");
 const putProductbyID = require("../controllers/product/putProductbyID");
-const searchProduct = require("../controllers/product/searchProduct");
+const searchProducts = require("../controllers/product/searchProducts");
 const postRegister = require("../controllers/User/postRegister");
 const postExcelProducts = require('../controllers/product/postExcelProducts');
 const postExcelImages = require('../controllers/product/postExcelImages');
@@ -22,6 +22,7 @@ const getProductByCategoryAndSubcategory = require('../controllers/product/getPr
 const getProductByCategorySubcategoryAndProductName = require('../controllers/product/getProductByCategorySubcategoryAndName');
 const getProductByItemId  = require('../controllers/product/getProductByItemId');
 const getRecentProducts = require('../controllers/product/getRecentProducts');
+const updateProductQuantity = require('../controllers/product/updateProductQuantity');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -34,6 +35,9 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+/* 
+const uploadMultiple = upload.array('imagenesEstado'); */
+router.post('/update-quantity', updateProductQuantity);
 
 // Ruta para subir archivo Excel de productos
 router.post('/postExcelProducts', upload.single('file'), postExcelProducts);
@@ -42,6 +46,33 @@ router.post('/postExcelProducts', upload.single('file'), postExcelProducts);
 router.post('/postExcelImages', upload.single('file'), postExcelImages);
 
 router.delete("/delete-all-images", deleteAllImages);
+
+/* const { updateSoporteTecnico, updateEstadoSoporteTecnico, getAllSoportesTecnicos, searchSoportesTecnicos,  getSoporteTecnicoById, } = require('../controllers/SoporteTecnico/SoporteTecnico'); */
+const { 
+  authenticateToken, 
+  getClienteSoportesTecnicos, 
+  getClienteSoporteTecnicoDetail
+} = require('../controllers/SoporteTecnico/SoporteTecnicoClient');
+
+/* const { postTechnicalSupport, uploadMiddleware }  = require('../controllers/SoporteTecnico/postTechnicalSupport'); */
+
+/* 
+// Ruta para crear un nuevo soporte técnico
+router.post('/soporte-tecnico', uploadMiddleware, postTechnicalSupport);
+
+// Ruta para actualizar un soporte técnico existente
+router.put('/soporteTecnico/:id', updateSoporteTecnico);
+
+router.put('/soporteTecnico/:id/estado', updateEstadoSoporteTecnico);
+
+router.get('/soportesTecnicos', getAllSoportesTecnicos);
+
+router.get('/soportetecnico/search', searchSoportesTecnicos);
+
+router.get('/soporte-tecnico/:id', getSoporteTecnicoById); */
+
+router.get('/soportetecnicocliente', authenticateToken, getClienteSoportesTecnicos);
+router.get('/soportetecnicocliente/:id', authenticateToken, getClienteSoporteTecnicoDetail);
 
 const postLogin = require("../controllers/User/postLogin");
 const PostRegisterGoogle = require("../controllers/User/postRegisterGoogle");
@@ -54,6 +85,39 @@ const {
   getCapacityById,
   updateCapacity,
   deleteCapacity,} = require('../controllers/Capacity/CapacitiesController');
+
+  const {
+    createPurchase,
+    getAllPurchases,
+    getPurchaseById,
+    updatePurchase,
+    deletePurchase
+  } = require('../controllers/Purchase/purchaseController');
+  
+  // Ruta para crear una nueva compra
+  router.post('/purchase', createPurchase);
+  
+  // Ruta para obtener todas las compras
+  router.get('/adminpurchases', getAllPurchases);
+  
+  // Ruta para obtener una compra por ID
+  router.get('/purchase/:id', getPurchaseById);
+  
+  // Ruta para actualizar una compra por ID
+  router.put('/purchase/:id', updatePurchase);
+  
+  // Ruta para eliminar una compra por ID
+  router.delete('/purchase/:id', deletePurchase);
+
+  const { getPurchasesByUserId } = require('../controllers/Purchase/userPurchasesController');
+
+// Ruta para obtener todas las compras de un usuario específico
+router.get('/user-purchases/user/:userId', getPurchasesByUserId);
+  
+ /*  router.get("/purchases", getAllPurchases); */
+ /*  router.get("/purchase/:id", getPurchaseById);
+  router.put("/purchase/:id", updatePurchase);
+  router.delete("/purchase/:id", deletePurchase); */
 
 const {
     createCategory,
@@ -109,7 +173,7 @@ const cancelOrder = require("../controllers/paypal/cancelOrder");
 const getBrands = require("../controllers/product/getBrands");
 
 const getStock = require("../controllers/stock/getStockByProductId");
-const getAllPurchases = require("../controllers/User/getAllPurchases");
+/* const getAllPurchases = require("../controllers/User/getAllPurchases"); */
 const addToCart = require("../controllers/Carrito/addToCart");
 const getShoppingCart = require("../controllers/Carrito/getShoppingCart");
 const deleteProduct = require("../controllers/Carrito/deleteProductController");
@@ -131,8 +195,6 @@ const postOrder = require("../controllers/Order/postOrder");
 const captureUserOrder = require("../controllers/Order/captureUserOrder");
 
 
-
-
 // Nuevo carrito rutas
 router.post("/postShoppingProduct", postShoppingProduct);
 router.put("/putShoppingProduct", putShoppingProduct);
@@ -146,7 +208,7 @@ router.get("/captureUserOrder", captureUserOrder);
 
 // Rutas de Productos
 router.get("/product", getProduct);
-router.get("/search/:product", searchProduct);
+router.get('/products/search', searchProducts);
 router.get("/product/:id", getProductByPk);
 router.get("/property", getProperty);
 router.get("/product/discount", getDiscountProducts);
