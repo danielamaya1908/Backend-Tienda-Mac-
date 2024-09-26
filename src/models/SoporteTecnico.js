@@ -86,7 +86,7 @@ module.exports = (sequelize) => {
     },
     estado: {
       type: DataTypes.ENUM,
-      values: ['Ingreso', 'Pendiente', 'Diagnosticando', 'En-Reparacion', 'Listo-Para-Entrega', 'Entregado'],
+      values: ['Ingreso', 'Pendiente', 'Diagnosticando', 'Reparando', 'Reparado', 'Entregado'],
       allowNull: false,
       defaultValue: 'Ingreso',
     },
