@@ -1,24 +1,7 @@
-const { User, SoporteTecnico, ImageSoporteTecnico, ImageEstado } = require('../../db');
+// Backend - controllers/soporteTecnico.js
+
+const { User, SoporteTecnico, ImageSoporteTecnico } = require('../../db');
 const { Op } = require('sequelize');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// Configuración de multer para almacenar archivos
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../../uploads');
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`);
-  }
-});
-
-const upload = multer({ storage });
 
 // Función para actualizar soporte técnico
 const updateSoporteTecnico = async (req, res) => {
@@ -59,11 +42,14 @@ const updateEstadoSoporteTecnico = async (req, res) => {
       return res.status(404).json({ error: 'Soporte técnico no encontrado' });
     }
 
+    // Actualizar el estado
     soporteTecnico.estado = estado;
 
+    // Si el estado es "Entregado", establecer la fecha de salida
     if (estado === 'Entregado') {
-      soporteTecnico.fechaSalida = new Date();
+      soporteTecnico.fechaSalida = new Date(); // Establece la fecha de salida actual
     } else {
+      // Si el estado no es "Entregado", puedes asegurarte de que fechaSalida esté en null o vacía
       soporteTecnico.fechaSalida = null;
     }
 
@@ -192,6 +178,7 @@ const getSoporteTecnicoById = async (req, res) => {
   }
 };
 
+
 const getClienteByDocumentNumber = async (req, res) => {
   try {
     const { documentNumber } = req.params;
@@ -211,87 +198,11 @@ const getClienteByDocumentNumber = async (req, res) => {
   }
 };
 
-// Función para subir imagen de soporte técnico
-const uploadImage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const file = req.file;
-
-    if (!file) {
-      return res.status(400).json({ error: 'No se ha subido ninguna imagen' });
-    }
-
-    const soporteTecnico = await SoporteTecnico.findByPk(id);
-    if (!soporteTecnico) {
-      return res.status(404).json({ error: 'Soporte técnico no encontrado' });
-    }
-
-    const imagen = await ImageEstado.create({
-      url: `/uploads/${file.filename}`,
-      soporteTecnicoId: id
-    });
-
-    return res.status(200).json(imagen);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Error al subir la imagen' });
-  }
-};
-
-// Nueva función para obtener la imagen más reciente según el estado
-const getImagesWithStates = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    // Buscar el soporte técnico por su ID
-    const soporteTecnico = await SoporteTecnico.findByPk(id, {
-      attributes: ['id', 'estado'], // Puedes agregar más atributos aquí si es necesario
-      include: [{
-        model: ImageEstado,
-        as: 'ImageEstados', // Usa el alias correcto según la relación hasMany
-        attributes: ['id', 'url', 'createdAt'], // Los atributos que quieres incluir de ImageEstado
-        order: [['createdAt', 'DESC']], // Ordenar por fecha de creación
-      }]
-    });
-
-    // Verificar si el soporte técnico existe
-    if (!soporteTecnico) {
-      return res.status(404).json({ error: 'Soporte técnico no encontrado' });
-    }
-
-    // Verificar si el soporte técnico tiene imágenes asociadas
-    if (!soporteTecnico.ImageEstados || soporteTecnico.ImageEstados.length === 0) {
-      return res.status(404).json({ error: 'No se encontraron imágenes para este soporte técnico' });
-    }
-
-    // Mapear las imágenes con sus estados
-    const imagenesConEstados = soporteTecnico.ImageEstados.map(imagen => ({
-      id: imagen.id,
-      url: imagen.url,
-      estado: soporteTecnico.estado, // Estado del soporte técnico cuando se subió la imagen
-      fechaSubida: imagen.createdAt
-    }));
-
-    // Devolver las imágenes con los estados
-    res.json({
-      id: soporteTecnico.id,
-      estadoActual: soporteTecnico.estado, // Estado actual del soporte técnico
-      imagenes: imagenesConEstados
-    });
-  } catch (error) {
-    console.error('Error al obtener las imágenes:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
 module.exports = {
   updateSoporteTecnico,
   updateEstadoSoporteTecnico,
   getAllSoportesTecnicos,
   searchSoportesTecnicos,
   getSoporteTecnicoById,
-  getClienteByDocumentNumber,
-  uploadImage,
-  upload,
-  getImagesWithStates
+  getClienteByDocumentNumber
 };

@@ -12,7 +12,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Crear un cliente de Axios configurado para Openpay
 const openpayClient = axios.create({
-  baseURL: `https://sandbox-api.openpay.co/v1/${MERCHANT_ID}`,
+  baseURL: `https://api.openpay.co/v1/${MERCHANT_ID}`,
   auth: {
     username: PRIVATE_KEY,
     password: '', // La contraseña está vacía

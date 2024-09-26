@@ -6,11 +6,13 @@ const {
   getAllSoportesTecnicos, 
   searchSoportesTecnicos,  
   getSoporteTecnicoById,
-  getClienteByDocumentNumber,
-  uploadImage,
-  upload,
-  getImagesWithStates
+  getClienteByDocumentNumber
 } = require('../controllers/SoporteTecnico/SoporteTecnico');
+/* const { 
+  authenticateToken, 
+  getClienteSoportesTecnicos, 
+  getClienteSoporteTecnicoDetail 
+} = require('../controllers/SoporteTecnico/SoporteTecnicoClient'); */
 const { 
   postTechnicalSupport, 
   uploadMiddleware 
@@ -25,9 +27,6 @@ router.put('/:id', updateSoporteTecnico);
 // Ruta para actualizar el estado de un soporte técnico
 router.put('/:id/estado', updateEstadoSoporteTecnico);
 
-// Ruta para subir una imagen de soporte técnico
-router.post('/:id/subir-imagen', upload.single('imagen'), uploadImage);
-
 // Ruta para obtener todos los soportes técnicos
 router.get('/', getAllSoportesTecnicos);
 
@@ -37,10 +36,13 @@ router.get('/search', searchSoportesTecnicos);
 // Ruta para obtener un soporte técnico por ID
 router.get('/:id', getSoporteTecnicoById);
 
-// Ruta para obtener un cliente por número de documento
 router.get('/cliente/:documentNumber', getClienteByDocumentNumber);
+/* // Ruta para obtener soportes técnicos del cliente (requiere autenticación)
+router.get('/soportetecnicocliente', authenticateToken, getClienteSoportesTecnicos);
 
-// Nueva ruta para obtener la imagen más reciente
-router.get('/:id/latest-image', getImagesWithStates);
+// Ruta para obtener detalles de un soporte técnico del cliente (requiere autenticación)
+router.get('/soportetecnicocliente/:id', authenticateToken, getClienteSoporteTecnicoDetail);
+
+ */
 
 module.exports = router;
