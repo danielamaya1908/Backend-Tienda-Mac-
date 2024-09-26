@@ -137,7 +137,7 @@ const cancelOrder = require("../controllers/paypal/cancelOrder");
 const getBrands = require("../controllers/product/getBrands");
 
 const getStock = require("../controllers/stock/getStockByProductId");
-const getAllPurchases = require("../controllers/User/getAllPurchases");
+/* const getAllPurchases = require("../controllers/User/getAllPurchases"); */
 const addToCart = require("../controllers/Carrito/addToCart");
 const getShoppingCart = require("../controllers/Carrito/getShoppingCart");
 const deleteProduct = require("../controllers/Carrito/deleteProductController");
