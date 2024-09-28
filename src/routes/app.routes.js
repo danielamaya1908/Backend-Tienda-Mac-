@@ -181,7 +181,7 @@ router.get("/captureUserOrder", captureUserOrder);
 
 // Rutas de Productos
 router.get("/product", getProduct);
-router.get("/search/:product", searchProduct);
+router.get('/products/search', searchProducts);
 router.get("/product/:id", getProductByPk);
 router.get("/property", getProperty);
 router.get("/product/discount", getDiscountProducts);
