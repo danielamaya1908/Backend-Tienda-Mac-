@@ -13,14 +13,14 @@ const postExcelImages = require('../controllers/product/postExcelImages');
 const getProductImages = require("../controllers/product/getProductImages");
 /* const postProductImages = require("../controllers/product/postProductImages"); */
 const getAllConditions = require("../controllers/Condition/getAllCondition");
-const postCondition  = require("../controllers/Condition/postCondition");
-const deleteCondition  = require("../controllers/Condition/deleteCondition");
-const putConditionByID  = require("../controllers/Condition/updateCondition");
+const postCondition = require("../controllers/Condition/postCondition");
+const deleteCondition = require("../controllers/Condition/deleteCondition");
+const putConditionByID = require("../controllers/Condition/updateCondition");
 /* const updateProductStatus = require('../controllers/product/updateProductStatus'); */
 const deleteAllImages = require("../controllers/product/deleteAllImages");
 const getProductByCategoryAndSubcategory = require('../controllers/product/getProductByCategoryAndSubcategory');
 const getProductByCategorySubcategoryAndProductName = require('../controllers/product/getProductByCategorySubcategoryAndName');
-const getProductByItemId  = require('../controllers/product/getProductByItemId');
+const getProductByItemId = require('../controllers/product/getProductByItemId');
 const getRecentProducts = require('../controllers/product/getRecentProducts');
 const multer = require('multer');
 
@@ -46,73 +46,79 @@ router.delete("/delete-all-images", deleteAllImages);
 const postLogin = require("../controllers/User/postLogin");
 const PostRegisterGoogle = require("../controllers/User/postRegisterGoogle");
 /* const getUser = require("../controllers/User/getUser"); */
-const getAllUsers = require("../controllers/User/getAllUser");
+const {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} = require("../controllers//User/getAllUser");
 const { createUserAdmin, validateUserAdmin, updateUserAdmin, deleteUserAdmin, getAllUserAdmins } = require("../controllers/User/createUserAdmin");
-const {  
+const {
   createCapacity,
   getAllCapacities,
   getCapacityById,
   updateCapacity,
-  deleteCapacity,} = require('../controllers/Capacity/CapacitiesController');
+  deleteCapacity, } = require('../controllers/Capacity/CapacitiesController');
 
-  const {
-    createPurchase,
-    getAllPurchases,
-    getPurchaseById,
-    updatePurchase,
-    deletePurchase
-  } = require('../controllers/Purchase/purchaseController');
-  
-  // Ruta para crear una nueva compra
-  router.post('/purchase', createPurchase);
-  
-  // Ruta para obtener todas las compras
-  router.get('/adminpurchases', getAllPurchases);
-  
-  // Ruta para obtener una compra por ID
-  router.get('/purchase/:id', getPurchaseById);
-  
-  // Ruta para actualizar una compra por ID
-  router.put('/purchase/:id', updatePurchase);
-  
-  // Ruta para eliminar una compra por ID
-  router.delete('/purchase/:id', deletePurchase);
+const {
+  createPurchase,
+  getAllPurchases,
+  getPurchaseById,
+  updatePurchase,
+  deletePurchase
+} = require('../controllers/Purchase/purchaseController');
 
-  const { getPurchasesByUserId } = require('../controllers/Purchase/userPurchasesController');
+// Ruta para crear una nueva compra
+router.post('/purchase', createPurchase);
+
+// Ruta para obtener todas las compras
+router.get('/adminpurchases', getAllPurchases);
+
+// Ruta para obtener una compra por ID
+router.get('/purchase/:id', getPurchaseById);
+
+// Ruta para actualizar una compra por ID
+router.put('/purchase/:id', updatePurchase);
+
+// Ruta para eliminar una compra por ID
+router.delete('/purchase/:id', deletePurchase);
+
+const { getPurchasesByUserId } = require('../controllers/Purchase/userPurchasesController');
 
 // Ruta para obtener todas las compras de un usuario específico
 router.get('/user-purchases/user/:userId', getPurchasesByUserId);
 
 const {
-    createCategory,
-    getAllCategories,
-    getCategoryById,
-    updateCategory,
-    deleteCategory,
-  } = require("../controllers/Category/CategoryController");
+  createCategory,
+  getAllCategories,
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
+} = require("../controllers/Category/CategoryController");
 
-  const {
-    createBrand,
-    getAllBrands,
-    getBrandById,
-    updateBrand,
-    deleteBrand,
-  } = require("../controllers/Brand/BrandController");
+const {
+  createBrand,
+  getAllBrands,
+  getBrandById,
+  updateBrand,
+  deleteBrand,
+} = require("../controllers/Brand/BrandController");
 
-  const {
-    createColor,
-    getAllColors,
-    getColorById,
-    updateColor,
-    deleteColor,
-  } = require("../controllers/Color/ColorsController");
+const {
+  createColor,
+  getAllColors,
+  getColorById,
+  updateColor,
+  deleteColor,
+} = require("../controllers/Color/ColorsController");
 
-  const {  
-    createSubcategory,
-    getAllSubcategories,
-    getSubcategoryById,
-    updateSubcategory,
-    deleteSubcategory,} = require('../controllers/SubCategory/SubCategory');
+const {
+  createSubcategory,
+  getAllSubcategories,
+  getSubcategoryById,
+  updateSubcategory,
+  deleteSubcategory, } = require('../controllers/SubCategory/SubCategory');
 
 const postShopping = require("../controllers/Carrito/PostShopping");
 const putShopping = require("../controllers/Carrito/PutShopping");
@@ -158,9 +164,9 @@ const putAllCart = require("../controllers/Cart/putAllCart");
 const postOrder = require("../controllers/Order/postOrder");
 const captureUserOrder = require("../controllers/Order/captureUserOrder");
 
-const { 
-  authenticateToken, 
-  getClienteSoportesTecnicos, 
+const {
+  authenticateToken,
+  getClienteSoportesTecnicos,
   getClienteSoporteTecnicoDetail
 } = require('../controllers/SoporteTecnico/SoporteTecnicoClient');
 
@@ -233,6 +239,17 @@ router.put("/user/:id/password", putPassword);
 /* router.get("/user/:id", getUser);
 router.get("/user", getUserByEmail); */
 router.get("/users", getAllUsers);
+// Obtener un usuario por ID
+router.get("/users/:id", getUserById);
+
+// Crear un nuevo usuario
+router.post("/users", createUser);
+
+// Actualizar un usuario existente
+router.put("/users/:id", updateUser);
+
+// Eliminar un usuario
+router.delete("/users/:id", deleteUser);
 router.get("/purchases/:id", getAllPurchases);
 
 // Rutas para tamaños
