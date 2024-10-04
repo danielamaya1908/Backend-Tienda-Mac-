@@ -1,4 +1,4 @@
-const { Purchase, User, Product, Image  } = require("../../db");
+const { Purchase, User, Product, Image } = require("../../db");
 
 // Crear una nueva compra
 const createPurchase = async (req, res) => {
@@ -24,16 +24,21 @@ const getAllPurchases = async (req, res) => {
   try {
     const purchases = await Purchase.findAll({
       attributes: [
-        'id', 
-        'amount', 
-        'currency', 
-        'description', 
-        'status', 
-        'payment_method', 
-        'customer_name', 
-        'customer_email', 
-        'reference', 
-        'charge_id', 
+        'id',
+        'amount',
+        'currency',
+        'description',
+        'status',
+        'payment_method',
+        'customer_name',
+        'customer_email',
+        'customer_phone', // Nuevo campo
+        'customer_city',  // Nuevo campo
+        'customer_department', // Nuevo campo
+        'customer_address', // Nuevo campo
+        'customer_document_number', // Nuevo campo
+        'reference',
+        'charge_id',
         'createdAt'
       ],
       include: [{

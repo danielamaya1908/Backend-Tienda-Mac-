@@ -1,4 +1,3 @@
-// models/Purchase.js
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -41,12 +40,32 @@ module.exports = (sequelize) => {
           isEmail: true,
         },
       },
+      customer_phone: {
+        type: DataTypes.STRING(20),
+        allowNull: true,
+      },
+      customer_city: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      customer_department: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      customer_address: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
       reference: {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
       charge_id: {
         type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      customer_document_number: {
+        type: DataTypes.STRING(20),
         allowNull: true,
       },
     },

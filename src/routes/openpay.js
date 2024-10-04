@@ -12,7 +12,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Crear un cliente de Axios configurado para Openpay
 const openpayClient = axios.create({
-  baseURL: `https://api.openpay.co/v1/${MERCHANT_ID}`,
+  baseURL: `https://sandbox-api.openpay.co/v1/${MERCHANT_ID}`,
   auth: {
     username: PRIVATE_KEY,
     password: '', // La contraseña está vacía
@@ -109,10 +109,15 @@ router.post('/store-payment', async (req, res) => {
       payment_method: result.method,
       customer_name: `${result.customer.name} ${result.customer.last_name}`,
       customer_email: result.customer.email,
+      customer_phone: result.customer.phone_number,
+      customer_city: result.customer.customer_address.city,
+      customer_department: result.customer.customer_address.department,
+      customer_address: result.customer.customer_address.additional,
       reference: result.id,
       charge_id: result.id,
-      userId,      // Incluyendo userId
-      productId,   // Incluyendo productId
+      userId,
+      productId,
+      customer_document_number: customer.document_number,
     };
     await storePurchase(purchaseData);
 
@@ -193,13 +198,17 @@ router.post('/pse-payment', async (req, res) => {
       payment_method: result.method,
       customer_name: `${result.customer.name} ${result.customer.last_name}`,
       customer_email: result.customer.email,
+      customer_phone: result.customer.phone_number,
+      customer_city: result.customer.customer_address.city,
+      customer_department: result.customer.customer_address.department,
+      customer_address: result.customer.customer_address.additional,
       reference: result.id,
       charge_id: result.id,
-      userId,      // Incluyendo userId
-      productId,   // Incluyendo productId
+      userId,
+      productId,
+      customer_document_number: customer.document_number,
     };
     await storePurchase(purchaseData);
-
     res.status(200).json(result);
   } catch (error) {
     console.error('Error en el controlador de pago PSE:', error.message);
@@ -256,10 +265,15 @@ router.post('/create-charge', async (req, res) => {
       payment_method: result.method,
       customer_name: `${result.customer.name} ${result.customer.last_name}`,
       customer_email: result.customer.email,
+      customer_phone: result.customer.phone_number,
+      customer_city: result.customer.customer_address.city,
+      customer_department: result.customer.customer_address.department,
+      customer_address: result.customer.customer_address.additional,
       reference: result.id,
       charge_id: result.id,
-      userId,      // Incluyendo userId
-      productId,   // Incluyendo productId
+      userId,
+      productId,
+      customer_document_number: customer.document_number,
     };
     await storePurchase(purchaseData);
 
