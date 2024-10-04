@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
@@ -208,7 +209,6 @@ router.post('/pse-payment', async (req, res) => {
       customer_document_number: customer.document_number,
     };
     await storePurchase(purchaseData);
-
     res.status(200).json(result);
   } catch (error) {
     console.error('Error en el controlador de pago PSE:', error.message);
@@ -246,17 +246,7 @@ router.post('/create-charge', async (req, res) => {
       amount,
       currency: currency || 'COP',
       description,
-      customer: {
-        name: customer.name,
-        last_name: customer.last_name,
-        email: customer.email,
-        phone_number: customer.phone_number,
-        customer_address: {
-          department: customer.department,
-          city: customer.city,
-          additional: customer.additional,
-        },
-      },
+      customer,
       confirm: confirm || "false",
       send_email: send_email || "true",
       redirect_url: redirect_url || 'http://www.google.com',
@@ -289,7 +279,7 @@ router.post('/create-charge', async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.error('Error en el controlador de cargo:', error);
+    console.error('Error en el controlador de cargo:', error); // Para depuración
     const statusCode = error.response ? error.response.status : 500;
     res.status(statusCode).json({
       error: error.response ? error.response.data : 'Error desconocido al crear el cargo',
