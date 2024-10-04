@@ -19,7 +19,6 @@ const createPurchase = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
-// Obtener todas las compras
 const getAllPurchases = async (req, res) => {
   try {
     const purchases = await Purchase.findAll({
@@ -32,6 +31,11 @@ const getAllPurchases = async (req, res) => {
         'payment_method',
         'customer_name',
         'customer_email',
+        'customer_phone', // Nuevo campo
+        'customer_city',  // Nuevo campo
+        'customer_department', // Nuevo campo
+        'customer_address', // Nuevo campo
+        'customer_document_number', // Nuevo campo
         'reference',
         'charge_id',
         'createdAt'
