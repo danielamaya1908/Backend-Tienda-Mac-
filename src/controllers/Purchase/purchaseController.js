@@ -32,11 +32,6 @@ const getAllPurchases = async (req, res) => {
         'payment_method',
         'customer_name',
         'customer_email',
-        'customer_phone', // Nuevo campo
-        'customer_city',  // Nuevo campo
-        'customer_department', // Nuevo campo
-        'customer_address', // Nuevo campo
-        'customer_document_number', // Nuevo campo
         'reference',
         'charge_id',
         'createdAt'

@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
@@ -12,7 +11,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // Crear un cliente de Axios configurado para Openpay
 const openpayClient = axios.create({
-  baseURL: `https://sandbox-api.openpay.co/v1/${MERCHANT_ID}`,
+  baseURL: `https://api.openpay.co/v1/${MERCHANT_ID}`,
   auth: {
     username: PRIVATE_KEY,
     password: '', // La contraseña está vacía
@@ -209,6 +208,7 @@ router.post('/pse-payment', async (req, res) => {
       customer_document_number: customer.document_number,
     };
     await storePurchase(purchaseData);
+
     res.status(200).json(result);
   } catch (error) {
     console.error('Error en el controlador de pago PSE:', error.message);
