@@ -32,7 +32,7 @@ const getClienteSoportesTecnicos = async (req, res) => {
     const soportesTecnicos = await SoporteTecnico.findAll({
       where: { userId: userId },
       attributes: [
-        'id', 'marca', 'modelo', 'serial', 'estado', 'createdAt', 'fechaIngreso', 'fechaSalida'
+        'id', 'marca', 'modelo', 'serial', 'estado', 'createdAt', 'fechaIngreso', 'fechaSalida', 'diagnosticoDescripcion' // Agregamos diagnosticoDescripcion
       ],
       include: [
         {
@@ -78,7 +78,7 @@ const getClienteSoporteTecnicoDetail = async (req, res) => {
         'id', 'marca', 'modelo', 'serial', 'userId', 'garantia', 'enciende', 'arranca', 
         'parlantes', 'teclado', 'camara', 'bluetooth', 'wifi', 'pinCarga', 'auricular', 
         'botones', 'pantalla', 'golpes', 'rayones', 'puertos', 'estado', 'createdAt', 
-        'fechaIngreso', 'fechaSalida'
+        'fechaIngreso', 'fechaSalida', 'diagnosticoDescripcion' // Agregamos diagnosticoDescripcion
       ],
       include: [
         {
@@ -106,8 +106,29 @@ const getClienteSoporteTecnicoDetail = async (req, res) => {
   }
 };
 
+// Obtener cliente por número de documento
+const getClienteByDocumentNumber = async (req, res) => {
+  try {
+    const { documentNumber } = req.params;
+    const cliente = await User.findOne({
+      where: { documentNumber },
+      attributes: ['id', 'firstName', 'lastName']
+    });
+
+    if (!cliente) {
+      return res.status(404).json({ error: 'Cliente no encontrado' });
+    }
+
+    res.json(cliente);
+  } catch (error) {
+    console.error('Error al obtener cliente por número de documento:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
 module.exports = {
   authenticateToken,
   getClienteSoportesTecnicos,
-  getClienteSoporteTecnicoDetail
+  getClienteSoporteTecnicoDetail,
+  getClienteByDocumentNumber
 };

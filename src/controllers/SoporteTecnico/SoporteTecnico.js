@@ -27,7 +27,7 @@ const updateSoporteTecnico = async (req, res) => {
     const {
       marca, modelo, serial, userId, garantia, enciende, arranca, parlantes, teclado,
       camara, bluetooth, wifi, pinCarga, auricular, botones, pantalla, golpes, rayones,
-      puertos, estado
+      puertos, estado, diagnosticoDescripcion
     } = req.body;
 
     const soporteTecnico = await SoporteTecnico.findByPk(id);
@@ -38,7 +38,7 @@ const updateSoporteTecnico = async (req, res) => {
     await soporteTecnico.update({
       marca, modelo, serial, userId, garantia, enciende, arranca, parlantes, teclado,
       camara, bluetooth, wifi, pinCarga, auricular, botones, pantalla, golpes, rayones,
-      puertos, estado
+      puertos, estado, diagnosticoDescripcion
     });
 
     return res.status(200).json(soporteTecnico);
@@ -52,7 +52,7 @@ const updateSoporteTecnico = async (req, res) => {
 const updateEstadoSoporteTecnico = async (req, res) => {
   try {
     const { id } = req.params;
-    const { estado } = req.body;
+    const { estado, diagnosticoDescripcion } = req.body;
 
     const soporteTecnico = await SoporteTecnico.findByPk(id);
     if (!soporteTecnico) {
@@ -60,6 +60,10 @@ const updateEstadoSoporteTecnico = async (req, res) => {
     }
 
     soporteTecnico.estado = estado;
+
+    if (estado === 'Diagnosticando' && diagnosticoDescripcion) {
+      soporteTecnico.diagnosticoDescripcion = diagnosticoDescripcion;
+    }
 
     if (estado === 'Entregado') {
       soporteTecnico.fechaSalida = new Date();
@@ -80,16 +84,17 @@ const getAllSoportesTecnicos = async (req, res) => {
   try {
     const soportesTecnicos = await SoporteTecnico.findAll({
       attributes: [
-        'id', 'marca', 'modelo', 'serial', 'userId', 'garantia', 'enciende', 'arranca', 
-        'parlantes', 'teclado', 'camara', 'bluetooth', 'wifi', 'pinCarga', 'auricular', 
-        'botones', 'pantalla', 'golpes', 'rayones', 'puertos', 'estado', 'createdAt', 'fechaIngreso', 'fechaSalida'
+        'id', 'marca', 'modelo', 'serial', 'userId', 'garantia', 'enciende', 'arranca',
+        'parlantes', 'teclado', 'camara', 'bluetooth', 'wifi', 'pinCarga', 'auricular',
+        'botones', 'pantalla', 'golpes', 'rayones', 'puertos', 'estado', 'createdAt', 
+        'fechaIngreso', 'fechaSalida', 'diagnosticoDescripcion'
       ],
       include: [
         {
           model: User,
-          attributes: ['id', 'documentNumber', 'externalSignIn', 'active', 'sendMailsActive', 
-                       'firstName', 'lastName', 'phoneNumber', 'address', 'city', 'country', 
-                       'zipCode', 'email', 'password', 'rol', 'image']
+          attributes: ['id', 'documentNumber', 'externalSignIn', 'active', 'sendMailsActive',
+            'firstName', 'lastName', 'phoneNumber', 'address', 'city', 'country',
+            'zipCode', 'email', 'password', 'rol', 'image']
         },
         {
           model: ImageSoporteTecnico,
@@ -134,14 +139,15 @@ const searchSoportesTecnicos = async (req, res) => {
     const soportesTecnicos = await SoporteTecnico.findAll({
       where: whereConditions,
       attributes: [
-        'id', 'marca', 'modelo', 'serial', 'userId', 'estado', 'createdAt', 'fechaIngreso', 'fechaSalida'
+        'id', 'marca', 'modelo', 'serial', 'userId', 'estado', 'createdAt', 
+        'fechaIngreso', 'fechaSalida', 'diagnosticoDescripcion'
       ],
       include: [
         {
           model: User,
-          attributes: ['id', 'documentNumber', 'externalSignIn', 'active', 'sendMailsActive', 
-                       'firstName', 'lastName', 'phoneNumber', 'address', 'city', 'country', 
-                       'zipCode', 'email', 'password', 'rol', 'image']
+          attributes: ['id', 'documentNumber', 'externalSignIn', 'active', 'sendMailsActive',
+            'firstName', 'lastName', 'phoneNumber', 'address', 'city', 'country',
+            'zipCode', 'email', 'password', 'rol', 'image']
         },
         {
           model: ImageSoporteTecnico,
@@ -163,16 +169,17 @@ const getSoporteTecnicoById = async (req, res) => {
 
     const soporteTecnico = await SoporteTecnico.findByPk(id, {
       attributes: [
-        'id', 'marca', 'modelo', 'serial', 'userId', 'garantia', 'enciende', 'arranca', 
-        'parlantes', 'teclado', 'camara', 'bluetooth', 'wifi', 'pinCarga', 'auricular', 
-        'botones', 'pantalla', 'golpes', 'rayones', 'puertos', 'estado', 'createdAt', 'fechaIngreso', 'fechaSalida'
+        'id', 'marca', 'modelo', 'serial', 'userId', 'garantia', 'enciende', 'arranca',
+        'parlantes', 'teclado', 'camara', 'bluetooth', 'wifi', 'pinCarga', 'auricular',
+        'botones', 'pantalla', 'golpes', 'rayones', 'puertos', 'estado', 'createdAt', 
+        'fechaIngreso', 'fechaSalida', 'diagnosticoDescripcion'
       ],
       include: [
         {
           model: User,
-          attributes: ['id', 'documentNumber', 'externalSignIn', 'active', 'sendMailsActive', 
-                       'firstName', 'lastName', 'phoneNumber', 'address', 'city', 'country', 
-                       'zipCode', 'email', 'password', 'rol', 'image']
+          attributes: ['id', 'documentNumber', 'externalSignIn', 'active', 'sendMailsActive',
+            'firstName', 'lastName', 'phoneNumber', 'address', 'city', 'country',
+            'zipCode', 'email', 'password', 'rol', 'image']
         },
         {
           model: ImageSoporteTecnico,
@@ -245,37 +252,34 @@ const getImagesWithStates = async (req, res) => {
 
     // Buscar el soporte técnico por su ID
     const soporteTecnico = await SoporteTecnico.findByPk(id, {
-      attributes: ['id', 'estado'], // Puedes agregar más atributos aquí si es necesario
+      attributes: ['id', 'estado', 'diagnosticoDescripcion'], // Incluimos diagnosticoDescripcion
       include: [{
         model: ImageEstado,
-        as: 'ImageEstados', // Usa el alias correcto según la relación hasMany
-        attributes: ['id', 'url', 'createdAt'], // Los atributos que quieres incluir de ImageEstado
-        order: [['createdAt', 'DESC']], // Ordenar por fecha de creación
+        as: 'ImageEstados',
+        attributes: ['id', 'url', 'createdAt'],
+        order: [['createdAt', 'DESC']],
       }]
     });
 
-    // Verificar si el soporte técnico existe
     if (!soporteTecnico) {
       return res.status(404).json({ error: 'Soporte técnico no encontrado' });
     }
 
-    // Verificar si el soporte técnico tiene imágenes asociadas
     if (!soporteTecnico.ImageEstados || soporteTecnico.ImageEstados.length === 0) {
       return res.status(404).json({ error: 'No se encontraron imágenes para este soporte técnico' });
     }
 
-    // Mapear las imágenes con sus estados
     const imagenesConEstados = soporteTecnico.ImageEstados.map(imagen => ({
       id: imagen.id,
       url: imagen.url,
-      estado: soporteTecnico.estado, // Estado del soporte técnico cuando se subió la imagen
+      estado: soporteTecnico.estado,
       fechaSubida: imagen.createdAt
     }));
 
-    // Devolver las imágenes con los estados
     res.json({
       id: soporteTecnico.id,
-      estadoActual: soporteTecnico.estado, // Estado actual del soporte técnico
+      estadoActual: soporteTecnico.estado,
+      diagnosticoDescripcion: soporteTecnico.diagnosticoDescripcion,
       imagenes: imagenesConEstados
     });
   } catch (error) {

@@ -98,6 +98,10 @@ module.exports = (sequelize) => {
     fechaSalida: {
       type: DataTypes.DATE,
       allowNull: true,
+    },
+     diagnosticoDescripcion: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     }
   });
 
