@@ -1,17 +1,17 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const cors = require("cors");
-const multer = require("multer");
-const path = require("path");
-const postExcelProducts = require("./controllers/product/postExcelProducts.js");
-require("./db.js");
-const authRoutes = require('./routes/auth.js');
-const openpayRoutes = require('./routes/openpay'); // Importa las rutas de Openpay
-const updateProductQuantity = require('./controllers/product/updateProductQuantity.js');
-const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
-import fetch from 'node-fetch'; // Importar node-fetch para el proxy
+import express from "express";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import morgan from "morgan";
+import cors from "cors";
+import multer from "multer";
+import path from "path";
+import postExcelProducts from "./controllers/product/postExcelProducts.js";
+import "./db.js";
+import authRoutes from './routes/auth.js';
+import openpayRoutes from './routes/openpay';
+import updateProductQuantity from './controllers/product/updateProductQuantity.js';
+import soporteTecnicoRoutes from './routes/soporteTecnico.routes';
+import fetch from 'node-fetch'; // Ahora puedes usar import
 
 const app = express();
 const router = express.Router(); // Inicializa el router
