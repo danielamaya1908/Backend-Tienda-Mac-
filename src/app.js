@@ -11,7 +11,7 @@ const authRoutes = require('./routes/auth.js');
 const openpayRoutes = require('./routes/openpay'); // Importa las rutas de Openpay
 const updateProductQuantity = require('./controllers/product/updateProductQuantity.js');
 const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
-const fetch = require("node-fetch"); // Importar node-fetch para el proxy
+import fetch from 'node-fetch'; // Importar node-fetch para el proxy
 
 const app = express();
 const router = express.Router(); // Inicializa el router
