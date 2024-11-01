@@ -17,7 +17,14 @@ const router = express.Router(); // Inicializa el router
 
 app.name = "API";
 
-app.use(cors());
+// Configuración de CORS
+const corsOptions = {
+  origin: '*', // Cambia esto para permitir solo los orígenes que necesites
+  credentials: true, // Permitir cookies de terceros
+};
+
+// Habilitar CORS
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
