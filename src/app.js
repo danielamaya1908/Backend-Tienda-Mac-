@@ -11,20 +11,14 @@ const authRoutes = require('./routes/auth.js');
 const openpayRoutes = require('./routes/openpay'); // Importa las rutas de Openpay
 const updateProductQuantity = require('./controllers/product/updateProductQuantity.js');
 const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
+const fetch = require("node-fetch"); // Importar node-fetch para el proxy
 
 const app = express();
 const router = express.Router(); // Inicializa el router
 
 app.name = "API";
 
-// Configuración de CORS
-const corsOptions = {
-  origin: '*', // Cambia esto para permitir solo los orígenes que necesites
-  credentials: true, // Permitir cookies de terceros
-};
-
-// Habilitar CORS
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
@@ -48,6 +42,28 @@ app.use('/uploads', express.static('src/uploads'));
 // Ruta relativa para servir imágenes estáticas
 const imagesPath = path.join(__dirname, 'ImagesProducts');
 app.use('/images', express.static(imagesPath));
+
+// Ruta del proxy para las imágenes
+app.get('/proxy/image/:imageName', async (req, res) => {
+  const imageName = req.params.imageName;
+  const rawUrl = `https://raw.githubusercontent.com/tu_usuario/tu_repositorio/main/src/ImagesProducts/${imageName}`;
+
+  try {
+    const response = await fetch(rawUrl, {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_TOKEN}` // Usa el token de acceso personal
+      }
+    });
+
+    if (!response.ok) throw new Error('Error fetching image');
+    const imageBuffer = await response.buffer();
+    res.set('Content-Type', response.headers.get('content-type'));
+    res.send(imageBuffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error loading image');
+  }
+});
 
 const upload = multer({ dest: "uploads/" });
 
