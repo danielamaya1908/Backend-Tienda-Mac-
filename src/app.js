@@ -5,12 +5,11 @@ const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-const fetch = require("node-fetch"); // Importar node-fetch para el proxy
-
 const postExcelProducts = require("./controllers/product/postExcelProducts.js");
-const updateProductQuantity = require("./controllers/product/updateProductQuantity.js");
+require("./db.js");
 const authRoutes = require('./routes/auth.js');
-const openpayRoutes = require('./routes/openpay');
+const openpayRoutes = require('./routes/openpay'); // Importa las rutas de Openpay
+const updateProductQuantity = require('./controllers/product/updateProductQuantity.js');
 const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
 
 const app = express();
@@ -42,28 +41,6 @@ app.use('/uploads', express.static('src/uploads'));
 // Ruta relativa para servir imágenes estáticas
 const imagesPath = path.join(__dirname, 'ImagesProducts');
 app.use('/images', express.static(imagesPath));
-
-// Ruta del proxy para las imágenes
-app.get('/proxy/image/:imageName', async (req, res) => {
-  const imageName = req.params.imageName;
-  const rawUrl = `https://raw.githubusercontent.com/tu_usuario/tu_repositorio/main/src/ImagesProducts/${imageName}`;
-
-  try {
-    const response = await fetch(rawUrl, {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_TOKEN}` // Usa el token de acceso personal
-      }
-    });
-
-    if (!response.ok) throw new Error('Error fetching image');
-    const imageBuffer = await response.buffer();
-    res.set('Content-Type', response.headers.get('content-type'));
-    res.send(imageBuffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error loading image');
-  }
-});
 
 const upload = multer({ dest: "uploads/" });
 
