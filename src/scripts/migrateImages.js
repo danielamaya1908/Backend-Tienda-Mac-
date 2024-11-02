@@ -1,23 +1,29 @@
-const fs = require("fs").promises; // Asegúrate de importar fs para trabajar con archivos
-const { ImageProduct, Image } = require("../db"); // Asegúrate de que la ruta sea correcta
+const fs = require("fs").promises; 
+const { ImageProduct, Image } = require("../db"); 
 
-const migrateImages = async () => {
+const migrateImagesInBatches = async (batchSize = 100) => {
   try {
-    // Obtiene todas las imágenes de la tabla `images`
     const oldImages = await Image.findAll();
+    const totalImages = oldImages.length;
+    
+    for (let i = 0; i < totalImages; i += batchSize) {
+      const imageBatch = oldImages.slice(i, i + batchSize);
+      
+      await Promise.all(imageBatch.map(async (oldImage) => {
+        try {
+          const imageData = await fs.readFile(oldImage.path);
+          await ImageProduct.create({
+            imageData,
+            productId: oldImage.productId,
+            itemId: oldImage.itemId,
+          });
+          console.log(`Migrated image with id ${oldImage.id} to ImageProduct`);
+        } catch (error) {
+          console.error(`Failed to migrate image with id ${oldImage.id}:`, error.message);
+        }
+      }));
 
-    for (const oldImage of oldImages) {
-      // Lee la imagen como un Buffer
-      const imageData = await fs.readFile(oldImage.path);
-
-      // Crea la nueva entrada en la tabla `ImageProduct`
-      await ImageProduct.create({
-        imageData,       // Almacena los bytes de la imagen
-        productId: oldImage.productId,
-        itemId: oldImage.itemId,
-      });
-
-      console.log(`Migrated image with id ${oldImage.id} to ImageProduct`);
+      console.log(`Processed batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(totalImages / batchSize)}`);
     }
 
     console.log("Migration completed successfully");
@@ -26,4 +32,4 @@ const migrateImages = async () => {
   }
 };
 
-module.exports = migrateImages;
+module.exports = migrateImagesInBatches;
