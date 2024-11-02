@@ -33,6 +33,7 @@ const {
   Order,
   Transaction,
   Image,
+  ImageProduct,
   Stock,
   ShoppingCart,
   Purchase,
