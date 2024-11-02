@@ -1,25 +1,25 @@
-const { ImageProduct } = require("../../db");
+const { Image } = require("../../db");
 
 const getProductImages = async (req, res) => {
   try {
     const { productId } = req.params;
 
-    const images = await ImageProduct.findAll({
+    const images = await Image.findAll({
       where: { productId },
-      attributes: ['id', 'imageData'], // Asegúrate de incluir 'imageData'
+      attributes: ['id', 'path'],
     });
 
     if (!images || images.length === 0) {
       return res.status(404).json({ message: "No images found for the product" });
     }
 
-    // Convertir los datos binarios a base64
-    const base64Images = images.map(image => ({
-      id: image.id,
-      data: image.imageData.toString('base64'), // Convertimos a base64
-    }));
+    const imagePaths = images.map(image => {
+      // Obtener solo el nombre del archivo de la ruta completa
+      const fileName = image.path.split('/').pop();
+      return fileName;
+    });
 
-    res.status(200).json(base64Images);
+    res.status(200).json(imagePaths);
   } catch (error) {
     console.error("Error getting product images:", error);
     res.status(500).json({ message: "Error getting product images" });

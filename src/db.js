@@ -33,7 +33,6 @@ const {
   Order,
   Transaction,
   Image,
-  ImageProduct,
   Stock,
   ShoppingCart,
   Purchase,
@@ -69,12 +68,6 @@ Product.belongsToMany(Storage, { through: Stock });
 // tabla intermedia de las imágenes de cada producto.
 Product.belongsTo(Image, { foreignKey: "imageId" });
 Image.hasOne(Product, { foreignKey: "imageId" });
-
-// Un producto puede tener múltiples imágenes
-Product.hasMany(ImageProduct, { foreignKey: "productId", as: "images" });
-// Cada imagen está asociada a un solo producto
-ImageProduct.belongsTo(Product, { foreignKey: "productId" });
-
 
 // tabla intermedia de los productos favoritos de cada usuario.
 User.belongsToMany(Product, { through: "user_like" });
