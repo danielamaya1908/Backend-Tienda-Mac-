@@ -12,9 +12,6 @@ const openpayRoutes = require('./routes/openpay'); // Importa las rutas de Openp
 const updateProductQuantity = require('./controllers/product/updateProductQuantity.js');
 const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
 
-// Importar la función de migración
-const migrateImages = require('./scripts/migrateImages'); // Asegúrate de que la ruta sea correcta
-
 const app = express();
 const router = express.Router(); // Inicializa el router
 
@@ -25,9 +22,6 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(morgan("dev"));
-
-// Ejecutar la migración al iniciar la aplicación
-migrateImages(); // Llama a la función de migración
 
 // Usa el router para definir la ruta
 router.post('/update-quantity', updateProductQuantity);
