@@ -37,19 +37,11 @@ app.use((req, res, next) => {
 });
 
 // Configuración de archivos estáticos
-const imagesPath = path.join(__dirname, 'images'); // Asegúrate de que esta ruta sea correcta
+app.use('/uploads', express.static('src/uploads'));
+
+// Ruta relativa para servir imágenes estáticas
+const imagesPath = path.join(__dirname, 'ImagesProducts');
 app.use('/images', express.static(imagesPath));
-
-// Ruta para la subida de imágenes
-const upload = multer({ dest: "uploads/" });
-
-app.post("/upload-image", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-  console.log("Archivo recibido:", req.file);
-  res.status(200).send("Imagen subida con éxito.");
-});
 
 // Ruta del proxy para las imágenes
 app.get('/proxy/image/:imageName', async (req, res) => {
@@ -73,8 +65,10 @@ app.get('/proxy/image/:imageName', async (req, res) => {
   }
 });
 
-// Rutas de autenticación y otros servicios
+const upload = multer({ dest: "uploads/" });
+
 app.use('/auth', authRoutes);
+
 app.post("/postExcelProducts", upload.single("file"), (req, res, next) => {
   console.log("Archivo recibido:", req.file);
   console.log("Cuerpo de la solicitud:", req.body);
