@@ -1,3 +1,4 @@
+const fs = require("fs").promises; // Asegúrate de importar fs para trabajar con archivos
 const { ImageProduct, Image } = require("../db"); // Asegúrate de que la ruta sea correcta
 
 const migrateImages = async () => {
