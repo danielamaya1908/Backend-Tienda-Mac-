@@ -439,7 +439,7 @@ const imagesToDelete = [
 ];
 
 // Importar la función de eliminación
-const deleteImages = require('./scripts/deleteImages'); // Asegúrate de que la ruta sea correcta
+const deleteImagesByNames = require('./scripts/deleteImagesByNames'); // Asegúrate de que la ruta sea correcta
 
 const app = express();
 const router = express.Router(); // Inicializa el router
