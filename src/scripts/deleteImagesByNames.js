@@ -28,7 +28,7 @@ const deleteImagesByNames = async (imageNames) => {
 
 // Lista de nombres de imágenes a eliminar
 const imagesToDelete = [
-  "MYEC3BE-A_1.jpg",
+ "MYEC3BE-A_1.jpg",
 "MYEC3BE-A_2.jpg",
 "MYEC3BE-A_3.jpg",
 "MYEC3BE-A_4.jpg",
@@ -434,23 +434,8 @@ const imagesToDelete = [
 "MYX73BE-A_5.jpg",
 "MYX73BE-A_6.jpg",
 "MYX73BE-A_7.jpg",
-
-  // ...añade todos los nombres de las imágenes que quieras eliminar
+  // ... agrega el resto de los nombres de imágenes aquí
 ];
 
-// Importar la función de eliminación
-const deleteImagesByNames = require('./scripts/deleteImagesByNames'); // Asegúrate de que la ruta sea correcta
-
-const app = express();
-const router = express.Router(); // Inicializa el router
-
-app.name = "API";
-
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(cookieParser());
-app.use(morgan("dev"));
-
-// Ejecutar la eliminación al iniciar la aplicación
-deleteImagesByNames(imagesToDelete); // Llama a la función de eliminación
+// Llama a la función para eliminar las imágenes
+deleteImagesByNames(imagesToDelete);
