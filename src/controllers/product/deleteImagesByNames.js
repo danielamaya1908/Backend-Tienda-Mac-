@@ -1,6 +1,6 @@
 // Importa los módulos necesarios
 const express = require('express');
-const { Image } = require('./models'); // Asegúrate de ajustar la ruta según tu estructura de carpetas
+const { Image } = require('../../models'); // Asegúrate de ajustar la ruta según tu estructura de carpetas
 
 const router = express.Router();
 
