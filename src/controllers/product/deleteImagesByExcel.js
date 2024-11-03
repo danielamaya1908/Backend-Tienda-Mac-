@@ -1,46 +1,56 @@
-const { ImageProduct } = require("../../db");
-const ExcelJS = require("exceljs");
+const XLSX = require("xlsx");
+const { Image } = require("../../db"); // Asegúrate de que este sea el modelo correcto para la tabla de imágenes
+const fs = require("fs");
+const path = require("path");
 
 const deleteImagesByExcel = async (req, res) => {
   try {
+    // Verificar que se haya subido un archivo
     if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      return res.status(400).json({ message: "Por favor, carga un archivo Excel." });
     }
 
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(req.file.buffer);
+    // Leer el archivo Excel
+    const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    
+    // Convertir los datos de la hoja de Excel en JSON
+    const data = XLSX.utils.sheet_to_json(sheet);
 
-    const worksheet = workbook.worksheets[0]; // Asumiendo que los datos están en la primera hoja
-    const itemIds = [];
+    // Obtener los itemId's de las imágenes que queremos eliminar
+    const itemIdsToDelete = data.map((row) => row.itemId).filter(Boolean);
 
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber > 1) { // Saltar el encabezado
-        const itemId = row.getCell(1).value; // Ajusta si el `itemId` está en otra columna
-        if (itemId) itemIds.push(itemId.toString());
-      }
-    });
-
-    if (itemIds.length === 0) {
-      return res.status(400).json({ message: "No valid itemIds found in the file" });
+    if (itemIdsToDelete.length === 0) {
+      return res.status(400).json({ message: "El archivo Excel no contiene itemIds válidos." });
     }
 
-    const imagesToDelete = await ImageProduct.findAll({
-      where: { itemId: itemIds },
+    // Encontrar las imágenes que coinciden con los itemId's
+    const imagesToDelete = await Image.findAll({
+      where: { itemId: itemIdsToDelete },
+      attributes: ["id", "path"]
     });
 
     if (imagesToDelete.length === 0) {
-      return res.status(404).json({ message: "No images found for the provided itemIds" });
+      return res.status(404).json({ message: "No se encontraron imágenes para los itemId's especificados." });
     }
 
-    // Eliminar imágenes en la base de datos
-    await ImageProduct.destroy({
-      where: { itemId: itemIds },
-    });
+    // Eliminar las imágenes tanto de la base de datos como de la carpeta de almacenamiento
+    for (const image of imagesToDelete) {
+      // Eliminar el archivo físico
+      const imagePath = path.join(__dirname, "../../uploads", image.path); // Ajusta la ruta según tu configuración
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
 
-    res.status(200).json({ message: `${imagesToDelete.length} images deleted successfully` });
+      // Eliminar el registro de la base de datos
+      await image.destroy();
+    }
+
+    res.status(200).json({ message: "Imágenes eliminadas correctamente." });
   } catch (error) {
-    console.error("Error deleting images:", error);
-    res.status(500).json({ message: "Error deleting images" });
+    console.error("Error al eliminar imágenes:", error);
+    res.status(500).json({ message: "Error al eliminar imágenes." });
   }
 };
 
