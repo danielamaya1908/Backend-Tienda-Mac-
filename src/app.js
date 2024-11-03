@@ -15,8 +15,6 @@ const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
 // Importar la función de migración
 /* const migrateImages = require('./scripts/migrateImages'); // Asegúrate de que la ruta sea correcta */
 
-
-
 const app = express();
 const router = express.Router(); // Inicializa el router
 
@@ -31,7 +29,6 @@ app.use(morgan("dev"));
 // Ejecutar la migración al iniciar la aplicación
 /* migrateImages(); // Llama a la función de migración */
 
-app.use('/', deleteImagesRouter);
 
 // Usa el router para definir la ruta
 router.post('/update-quantity', updateProductQuantity);
