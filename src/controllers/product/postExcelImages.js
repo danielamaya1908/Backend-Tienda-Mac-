@@ -1,7 +1,6 @@
 const fs = require("fs").promises;
-const path = require("path");
 const xlsx = require("xlsx");
-const { Image, Product } = require("../../db");
+const { ImageProduct, Product } = require("../../db");
 
 const postExcelImages = async (req, res) => {
   try {
@@ -16,55 +15,26 @@ const postExcelImages = async (req, res) => {
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
-    // Ruta relativa a la carpeta de imágenes
-    const imageFolderPath = process.env.IMAGE_FOLDER_PATH || path.join(process.cwd(), 'src', 'ImagesProducts');
-
-    console.log("Ruta de la carpeta de imágenes:", imageFolderPath);
-    
-    try {
-      const folderContents = await fs.readdir(imageFolderPath);
-      console.log("Contenido de la carpeta:", folderContents);
-    } catch (error) {
-      console.error("Error al leer el contenido de la carpeta de imágenes:", error);
-    }
-
     for (const row of data) {
       const { itemId, image_name } = row;
 
       const product = await Product.findOne({ where: { itemId } });
 
       if (product) {
-        const fullImagePath = path.join(imageFolderPath, image_name);
+        const imageFolderPath = process.env.IMAGE_FOLDER_PATH || 'src/ImagesProducts'; // Define la carpeta de imágenes
 
-        try {
-          await fs.access(fullImagePath);
-          
-          // Verificar si ya existe una imagen con el mismo nombre para el producto
-          const existingImage = await Image.findOne({
-            where: {
-              path: fullImagePath,
-              productId: product.id
-            }
-          });
+        // Lee la imagen como bytes (Buffer)
+        const fullImagePath = `${imageFolderPath}/${image_name}`;
+        const imageData = await fs.readFile(fullImagePath);
 
-          if (!existingImage) {
-            const image = await Image.create({
-              path: fullImagePath,
-              productId: product.id,
-              itemId: itemId,
-            });
+        // Almacena los bytes de la imagen en la base de datos
+        const image = await ImageProduct.create({
+          imageData,
+          productId: product.id,
+          itemId: itemId,
+        });
 
-            console.log(`Image ${image.id} uploaded for product ${product.id}`);
-
-            // Actualizar el campo imageId del producto con el ID de la imagen
-            await Product.update({ imageId: image.id }, { where: { id: product.id } });
-          } else {
-            console.log(`Image already exists for product ${product.id}: ${image_name}`);
-          }
-        } catch (error) {
-          console.log(`Image file not found or inaccessible: ${fullImagePath}`);
-          console.error(error);
-        }
+        console.log(`Image ${image.id} uploaded for product ${product.id}`);
       } else {
         console.log(`Product not found with itemId: ${itemId}`);
       }
