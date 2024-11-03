@@ -13,7 +13,7 @@ const updateProductQuantity = require('./controllers/product/updateProductQuanti
 const soporteTecnicoRoutes = require('./routes/soporteTecnico.routes');
 
 // Importar la función de migración
-const migrateImages = require('./scripts/migrateImages'); // Asegúrate de que la ruta sea correcta
+/* const migrateImages = require('./scripts/migrateImages'); // Asegúrate de que la ruta sea correcta */
 
 
 
@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 // Ejecutar la migración al iniciar la aplicación
-migrateImages(); // Llama a la función de migración
+/* migrateImages(); // Llama a la función de migración */
 
 // Usa el router para definir la ruta
 router.post('/update-quantity', updateProductQuantity);
