@@ -44,7 +44,8 @@ router.post('/postExcelImages', upload.single('file'), postExcelImages);
 router.delete("/delete-all-images", deleteAllImages);
 
 const deleteImagesByExcel = require("../controllers/product/deleteImagesByExcel");
-router.delete("/delete-images-by-excel", upload.single('file'), deleteImagesByExcel);
+router.post("/delete-images-by-excel", upload.single('file'), deleteImagesByExcel);
+
 
 const postLogin = require("../controllers/User/postLogin");
 const PostRegisterGoogle = require("../controllers/User/postRegisterGoogle");
