@@ -1,4 +1,3 @@
-const fs = require("fs").promises;
 const { ImageProduct } = require("../db");
 const sharp = require("sharp");
 
@@ -8,8 +7,7 @@ const convertImagesToWebP = async () => {
 
     for (const image of images) {
       try {
-        const imageData = await fs.readFile(image.path);
-        const webpData = await sharp(imageData).webp().toBuffer();
+        const webpData = await sharp(image.imageData).webp().toBuffer();
         await ImageProduct.update(
           { imageData: webpData },
           { where: { id: image.id } }

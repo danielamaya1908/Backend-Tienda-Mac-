@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
       autoIncrement: true,
     },
     imageData: {
-      type: DataTypes.BLOB("long"),  // Almacena los datos binarios de la imagen
+      type: DataTypes.BLOB("long"), // Almacena los datos binarios de la imagen
       allowNull: false,
     },
     productId: {
