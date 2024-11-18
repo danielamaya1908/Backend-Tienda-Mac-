@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router();
-const postProduct = require('../controllers/product/postProduct');
+const postProduct = require("../controllers/product/postProduct");
 const getProductByPk = require("../controllers/product/getProductByPk");
 const getProduct = require("../controllers/product/getProduct");
 const getProductOrderBy = require("../controllers/product/getProductOrderBy");
@@ -8,9 +8,10 @@ const deleteProductByPk = require("../controllers/product/deleteProductByPk");
 const putProductbyID = require("../controllers/product/putProductbyID");
 const searchProducts = require("../controllers/product/searchProduct");
 const postRegister = require("../controllers/User/postRegister");
-const postExcelProducts = require('../controllers/product/postExcelProducts');
-const postExcelImages = require('../controllers/product/postExcelImages');
+const postExcelProducts = require("../controllers/product/postExcelProducts");
+const postExcelImages = require("../controllers/product/postExcelImages");
 const getProductImages = require("../controllers/product/getProductImages");
+const getImagesHome = require("../controllers/product/getImagesHome");
 /* const postProductImages = require("../controllers/product/postProductImages"); */
 const getAllConditions = require("../controllers/Condition/getAllCondition");
 const postCondition = require("../controllers/Condition/postCondition");
@@ -18,28 +19,28 @@ const deleteCondition = require("../controllers/Condition/deleteCondition");
 const putConditionByID = require("../controllers/Condition/updateCondition");
 /* const updateProductStatus = require('../controllers/product/updateProductStatus'); */
 const deleteAllImages = require("../controllers/product/deleteAllImages");
-const getProductByCategoryAndSubcategory = require('../controllers/product/getProductByCategoryAndSubcategory');
-const getProductByCategorySubcategoryAndProductName = require('../controllers/product/getProductByCategorySubcategoryAndName');
-const getProductByItemId = require('../controllers/product/getProductByItemId');
-const getRecentProducts = require('../controllers/product/getRecentProducts');
-const multer = require('multer');
+const getProductByCategoryAndSubcategory = require("../controllers/product/getProductByCategoryAndSubcategory");
+const getProductByCategorySubcategoryAndProductName = require("../controllers/product/getProductByCategorySubcategoryAndName");
+const getProductByItemId = require("../controllers/product/getProductByItemId");
+const getRecentProducts = require("../controllers/product/getRecentProducts");
+const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
 const upload = multer({ storage: storage });
 
 // Ruta para subir archivo Excel de productos
-router.post('/postExcelProducts', upload.single('file'), postExcelProducts);
+router.post("/postExcelProducts", upload.single("file"), postExcelProducts);
 
 // Ruta para subir imágenes desde archivo Excel
-router.post('/postExcelImages', upload.single('file'), postExcelImages);
+router.post("/postExcelImages", upload.single("file"), postExcelImages);
 
 router.delete("/delete-all-images", deleteAllImages);
 
@@ -53,41 +54,50 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers//User/getAllUser");
-const { createUserAdmin, validateUserAdmin, updateUserAdmin, deleteUserAdmin, getAllUserAdmins } = require("../controllers/User/createUserAdmin");
+const {
+  createUserAdmin,
+  validateUserAdmin,
+  updateUserAdmin,
+  deleteUserAdmin,
+  getAllUserAdmins,
+} = require("../controllers/User/createUserAdmin");
 const {
   createCapacity,
   getAllCapacities,
   getCapacityById,
   updateCapacity,
-  deleteCapacity, } = require('../controllers/Capacity/CapacitiesController');
+  deleteCapacity,
+} = require("../controllers/Capacity/CapacitiesController");
 
 const {
   createPurchase,
   getAllPurchases,
   getPurchaseById,
   updatePurchase,
-  deletePurchase
-} = require('../controllers/Purchase/purchaseController');
+  deletePurchase,
+} = require("../controllers/Purchase/purchaseController");
 
 // Ruta para crear una nueva compra
-router.post('/purchase', createPurchase);
+router.post("/purchase", createPurchase);
 
 // Ruta para obtener todas las compras
-router.get('/adminpurchases', getAllPurchases);
+router.get("/adminpurchases", getAllPurchases);
 
 // Ruta para obtener una compra por ID
-router.get('/purchase/:id', getPurchaseById);
+router.get("/purchase/:id", getPurchaseById);
 
 // Ruta para actualizar una compra por ID
-router.put('/purchase/:id', updatePurchase);
+router.put("/purchase/:id", updatePurchase);
 
 // Ruta para eliminar una compra por ID
-router.delete('/purchase/:id', deletePurchase);
+router.delete("/purchase/:id", deletePurchase);
 
-const { getPurchasesByUserId } = require('../controllers/Purchase/userPurchasesController');
+const {
+  getPurchasesByUserId,
+} = require("../controllers/Purchase/userPurchasesController");
 
 // Ruta para obtener todas las compras de un usuario específico
-router.get('/user-purchases/user/:userId', getPurchasesByUserId);
+router.get("/user-purchases/user/:userId", getPurchasesByUserId);
 
 const {
   createCategory,
@@ -118,7 +128,8 @@ const {
   getAllSubcategories,
   getSubcategoryById,
   updateSubcategory,
-  deleteSubcategory, } = require('../controllers/SubCategory/SubCategory');
+  deleteSubcategory,
+} = require("../controllers/SubCategory/SubCategory");
 
 const postShopping = require("../controllers/Carrito/PostShopping");
 const putShopping = require("../controllers/Carrito/PutShopping");
@@ -167,12 +178,19 @@ const captureUserOrder = require("../controllers/Order/captureUserOrder");
 const {
   authenticateToken,
   getClienteSoportesTecnicos,
+  getClienteSoporteTecnicoDetail,
+} = require("../controllers/SoporteTecnico/SoporteTecnicoClient");
+
+router.get(
+  "/soportetecnicocliente",
+  authenticateToken,
+  getClienteSoportesTecnicos
+);
+router.get(
+  "/soportetecnicocliente/:id",
+  authenticateToken,
   getClienteSoporteTecnicoDetail
-} = require('../controllers/SoporteTecnico/SoporteTecnicoClient');
-
-router.get('/soportetecnicocliente', authenticateToken, getClienteSoportesTecnicos);
-router.get('/soportetecnicocliente/:id', authenticateToken, getClienteSoporteTecnicoDetail);
-
+);
 
 // Nuevo carrito rutas
 router.post("/postShoppingProduct", postShoppingProduct);
@@ -187,7 +205,7 @@ router.get("/captureUserOrder", captureUserOrder);
 
 // Rutas de Productos
 router.get("/product", getProduct);
-router.get('/products/search', searchProducts);
+router.get("/products/search", searchProducts);
 router.get("/product/:id", getProductByPk);
 router.get("/property", getProperty);
 router.get("/product/discount", getDiscountProducts);
@@ -200,12 +218,13 @@ router.post("/product", postProduct);
 router.delete("/product/:id", deleteProductByPk);
 router.put("/product/:id", putProductbyID);
 router.get("/products/:productId/images", getProductImages);
+router.get("/products/:productId/imagesHome", getImagesHome);
 /* router.post("/products/:productId/images", upload.array('images'), postProductImages); */
 
 router.post("/condition", postCondition);
 router.get("/condition", getAllConditions);
-router.delete('/condition/:id', deleteCondition);
-router.put('/condition/:id', putConditionByID);
+router.delete("/condition/:id", deleteCondition);
+router.put("/condition/:id", putConditionByID);
 /* 
 router.put('/products/:id/status', updateProductStatus); */
 
@@ -216,10 +235,10 @@ router.post("/login", postLogin);
 router.post("/password-recover", PostRecoverPassword);
 router.post("/password-update", PostUpdatePassword);
 router.post("/userAdmin", createUserAdmin);
-router.post('/validateUserAdmin', validateUserAdmin);
+router.post("/validateUserAdmin", validateUserAdmin);
 router.delete("/deleteUserAdmin/:id", deleteUserAdmin);
 router.put("/updateUserAdmin/:id", updateUserAdmin);
-router.get('/getAllUserAdmins', getAllUserAdmins);
+router.get("/getAllUserAdmins", getAllUserAdmins);
 
 router.post("/createCategory", createCategory);
 router.get("/getAllCategories", getAllCategories);
@@ -253,27 +272,36 @@ router.delete("/users/:id", deleteUser);
 router.get("/purchases/:id", getAllPurchases);
 
 // Rutas para tamaños
-router.post('/createCapacities', createCapacity);
-router.get('/getAllCapacities', getAllCapacities);
-router.get('/getCapacitiesById/:id', getCapacityById);
-router.put('/updateCapacities/:id', updateCapacity);
-router.delete('/deleteCapacities/:id', deleteCapacity);
+router.post("/createCapacities", createCapacity);
+router.get("/getAllCapacities", getAllCapacities);
+router.get("/getCapacitiesById/:id", getCapacityById);
+router.put("/updateCapacities/:id", updateCapacity);
+router.delete("/deleteCapacities/:id", deleteCapacity);
 
-router.post('/createSubcategories', createSubcategory);
-router.get('/getAllSubcategories', getAllSubcategories);
-router.get('/getSubcategoriesById/:id', getSubcategoryById);
-router.put('/updateSubcategories/:id', updateSubcategory);
-router.delete('/deleteSubcategories/:id', deleteSubcategory);
+router.post("/createSubcategories", createSubcategory);
+router.get("/getAllSubcategories", getAllSubcategories);
+router.get("/getSubcategoriesById/:id", getSubcategoryById);
+router.put("/updateSubcategories/:id", updateSubcategory);
+router.delete("/deleteSubcategories/:id", deleteSubcategory);
 
 router.post("/color", createColor);
 router.get("/colors", getAllColors);
 router.get("/color/:id", getColorById);
 router.put("/color/:id", updateColor);
 router.delete("/color/:id", deleteColor);
-router.get('/products/category/:category/subcategory/:subcategory', getProductByCategoryAndSubcategory);
-router.get('/products/category/:category/subcategory/:subcategory/name/:name', getProductByCategorySubcategoryAndProductName);
-router.get('/products/category/:category/subcategory/:subcategory/item/:itemId', getProductByItemId);
-router.get('/products/recent', getRecentProducts);
+router.get(
+  "/products/category/:category/subcategory/:subcategory",
+  getProductByCategoryAndSubcategory
+);
+router.get(
+  "/products/category/:category/subcategory/:subcategory/name/:name",
+  getProductByCategorySubcategoryAndProductName
+);
+router.get(
+  "/products/category/:category/subcategory/:subcategory/item/:itemId",
+  getProductByItemId
+);
+router.get("/products/recent", getRecentProducts);
 
 // Rutas de Favoritos
 router.post("/postFavorite", postFavorite);
