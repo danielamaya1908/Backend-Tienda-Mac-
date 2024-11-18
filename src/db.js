@@ -75,14 +75,18 @@ Product.belongsToMany(Storage, { through: Stock });
 Product.belongsTo(Image, { foreignKey: "imageId" });
 Image.hasOne(Product, { foreignKey: "imageId" });
 
-// Un producto puede tener múltiples imágenes
-Product.hasMany(ImageProduct, { foreignKey: "productId", as: "images" });
+// Un producto puede tener múltiples imágenes de productos
+Product.hasMany(ImageProduct, { foreignKey: "productId", as: "productImages" });
 // Cada imagen está asociada a un solo producto
-ImageProduct.belongsTo(Product, { foreignKey: "productId" });
+ImageProduct.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "productImages",
+});
 
-Product.hasMany(ImageHome, { foreignKey: "productId", as: "images" });
+// Un producto puede tener múltiples imágenes para la página principal
+Product.hasMany(ImageHome, { foreignKey: "productId", as: "homeImages" });
 // Cada imagen está asociada a un solo producto
-ImageHome.belongsTo(Product, { foreignKey: "productId" });
+ImageHome.belongsTo(Product, { foreignKey: "productId", as: "homeImages" });
 
 // tabla intermedia de los productos favoritos de cada usuario.
 User.belongsToMany(Product, { through: "user_like" });
