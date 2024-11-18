@@ -11,7 +11,7 @@ const authRoutes = require("./routes/auth.js");
 const openpayRoutes = require("./routes/openpay"); // Importa las rutas de Openpay
 const updateProductQuantity = require("./controllers/product/updateProductQuantity.js");
 const soporteTecnicoRoutes = require("./routes/soporteTecnico.routes");
-const convertImagesToWebP = require("./scripts/convertToWebP.js");
+/* const convertImagesToWebP = require("./scripts/convertToWebP.js"); */
 // Importar la función de migración
 /* const migrateImages = require('./scripts/migrateImages'); // Asegúrate de que la ruta sea correcta */
 
@@ -28,7 +28,7 @@ app.use(morgan("dev"));
 
 // Ejecutar la migración al iniciar la aplicación
 /* migrateImages(); // Llama a la función de migración */
-convertImagesToWebP();
+/* convertImagesToWebP(); */
 // Usa el router para definir la ruta
 router.post("/update-quantity", updateProductQuantity);
 app.use(router);

@@ -1,11 +1,11 @@
 const fs = require("fs").promises;
 const xlsx = require("xlsx");
-const { ImageProduct, Product } = require("../../db");
+const { ImageHome, Product } = require("../../db");
 
 const postExcelImages = async (req, res) => {
   try {
     console.log("Current working directory:", process.cwd());
-    
+
     if (!req.file) {
       return res.status(400).json({ message: "No Excel file uploaded" });
     }
@@ -21,14 +21,15 @@ const postExcelImages = async (req, res) => {
       const product = await Product.findOne({ where: { itemId } });
 
       if (product) {
-        const imageFolderPath = process.env.IMAGE_FOLDER_PATH || 'src/ImagesProducts'; // Define la carpeta de imágenes
+        const imageFolderPath =
+          process.env.IMAGE_FOLDER_PATH || "src/ImagesProducts"; // Define la carpeta de imágenes
 
         // Lee la imagen como bytes (Buffer)
         const fullImagePath = `${imageFolderPath}/${image_name}`;
         const imageData = await fs.readFile(fullImagePath);
 
         // Almacena los bytes de la imagen en la base de datos
-        const image = await ImageProduct.create({
+        const image = await ImageHome.create({
           imageData,
           productId: product.id,
           itemId: itemId,
