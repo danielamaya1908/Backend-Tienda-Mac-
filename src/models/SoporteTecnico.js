@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
     pinCarga: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
-      field: 'pin_de_carga'
+      field: "pin_de_carga",
     },
     auricular: {
       type: DataTypes.BOOLEAN,
@@ -86,9 +86,16 @@ module.exports = (sequelize) => {
     },
     estado: {
       type: DataTypes.ENUM,
-      values: ['Ingreso', 'Pendiente', 'Diagnosticando', 'Reparando', 'Reparado', 'Entregado'],
+      values: [
+        "Ingreso",
+        "En espera de aprobacion cliente",
+        "En diagnostico",
+        "En reparacion",
+        "Listo para entregar",
+        "Entregado",
+      ],
       allowNull: false,
-      defaultValue: 'Ingreso',
+      defaultValue: "Ingreso",
     },
     fechaIngreso: {
       type: DataTypes.DATE,
@@ -99,10 +106,10 @@ module.exports = (sequelize) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
-     diagnosticoDescripcion: {
+    diagnosticoDescripcion: {
       type: DataTypes.TEXT,
       allowNull: true,
-    }
+    },
   });
 
   return SoporteTecnico;
