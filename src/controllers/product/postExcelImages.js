@@ -1,6 +1,6 @@
 const fs = require("fs").promises;
 const xlsx = require("xlsx");
-const { ImageProduct, Product } = require("../../db");
+const { ImageHome, Product } = require("../../db"); // Cambiado a ImageHome
 
 const postExcelImages = async (req, res) => {
   try {
@@ -29,7 +29,7 @@ const postExcelImages = async (req, res) => {
         const imageData = await fs.readFile(fullImagePath);
 
         // Almacena los bytes de la imagen en la base de datos
-        const image = await ImageProduct.create({
+        const image = await ImageHome.create({
           imageData,
           productId: product.id,
           itemId: itemId,
