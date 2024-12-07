@@ -102,7 +102,7 @@ const updateEstadoSoporteTecnico = async (req, res) => {
 
     soporteTecnico.estado = estado;
 
-    if (estado === "En diagnostico" && diagnosticoDescripcion) {
+    if (estado === "Diagnosticando" && diagnosticoDescripcion) {
       soporteTecnico.diagnosticoDescripcion = diagnosticoDescripcion;
     }
 
