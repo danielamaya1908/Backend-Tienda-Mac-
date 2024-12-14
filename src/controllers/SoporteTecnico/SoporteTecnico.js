@@ -79,7 +79,8 @@ const updateSoporteTecnico = async (req, res) => {
       rayones,
       puertos,
       estado,
-      diagnosticoDescripcion,
+      diagnosticoDescripcion:
+        diagnosticoDescripcion || soporteTecnico.diagnosticoDescripcion,
     });
 
     return res.status(200).json(soporteTecnico);
@@ -103,7 +104,11 @@ const updateEstadoSoporteTecnico = async (req, res) => {
     soporteTecnico.estado = estado;
 
     if (estado === "Diagnosticando" && diagnosticoDescripcion) {
-      soporteTecnico.diagnosticoDescripcion = diagnosticoDescripcion;
+      // Concatenar la nueva descripción con la existente
+      soporteTecnico.diagnosticoDescripcion =
+        soporteTecnico.diagnosticoDescripcion
+          ? `${soporteTecnico.diagnosticoDescripcion}\n${diagnosticoDescripcion}`
+          : diagnosticoDescripcion;
     }
 
     if (estado === "Entregado") {
