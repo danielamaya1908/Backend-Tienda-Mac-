@@ -103,12 +103,8 @@ const updateEstadoSoporteTecnico = async (req, res) => {
 
     soporteTecnico.estado = estado;
 
-    // Handle description for both Diagnosticando and Entregado states
-    if (
-      (estado === "Diagnosticando" || estado === "Entregado") &&
-      diagnosticoDescripcion
-    ) {
-      // Concatenate the new description with the existing one
+    if (estado === "Diagnosticando" && diagnosticoDescripcion) {
+      // Concatenar la nueva descripción con la existente
       soporteTecnico.diagnosticoDescripcion =
         soporteTecnico.diagnosticoDescripcion
           ? `${soporteTecnico.diagnosticoDescripcion}\n${diagnosticoDescripcion}`
