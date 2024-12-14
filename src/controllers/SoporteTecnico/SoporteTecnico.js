@@ -100,18 +100,22 @@ const updateEstadoSoporteTecnico = async (req, res) => {
       return res.status(404).json({ error: "Soporte técnico no encontrado" });
     }
 
+    // Actualizar el estado
     soporteTecnico.estado = estado;
 
-    if (estado === "Diagnosticando" && diagnosticoDescripcion) {
+    // Actualizar la descripción tanto para Diagnosticando como Entregado
+    if (diagnosticoDescripcion) {
       soporteTecnico.diagnosticoDescripcion = diagnosticoDescripcion;
     }
 
+    // Actualizar la fecha de salida si el estado es "Entregado"
     if (estado === "Entregado") {
       soporteTecnico.fechaSalida = new Date();
     } else {
       soporteTecnico.fechaSalida = null;
     }
 
+    // Guardar los cambios
     await soporteTecnico.save();
 
     return res.status(200).json(soporteTecnico);
