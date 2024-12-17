@@ -111,8 +111,8 @@ module.exports = (sequelize) => {
       allowNull: true,
     },
     claveEquipo: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: Sequelize.STRING, // O el tipo de datos que uses
+      allowNull: true, // Permite valores NULL
     },
   });
 
