@@ -30,7 +30,6 @@ const postTechnicalSupport = async (req, res) => {
       modelo,
       serial,
       DocumentNumber,
-      password, // Campo de contraseña
       garantia,
       enciende,
       arranca,
@@ -48,16 +47,17 @@ const postTechnicalSupport = async (req, res) => {
       puertos,
       estado,
       diagnosticoDescripcion, // Nuevo campo para la descripción
+      claveEquipo, // Nuevo campo para la clave del equipo
     } = req.body;
 
     // Verificar si se han subido archivos
     const files = req.files || [];
     console.log("Archivos subidos:", files);
 
-    if (!marca || !modelo || !serial || !DocumentNumber || !password) {
+    if (!marca || !modelo || !serial || !DocumentNumber || !claveEquipo) {
       return res.status(400).json({
         error:
-          "Marca, modelo, serial, DocumentNumber y password son campos requeridos",
+          "Marca, modelo, serial, DocumentNumber y claveEquipo son campos requeridos",
       });
     }
 
@@ -75,7 +75,6 @@ const postTechnicalSupport = async (req, res) => {
       modelo,
       serial,
       userId: user.id, // Utiliza el id del usuario encontrado
-      password, // Guardar la contraseña
       garantia: garantia === "true",
       enciende: enciende === "true",
       arranca: arranca === "true",
@@ -93,6 +92,7 @@ const postTechnicalSupport = async (req, res) => {
       puertos: puertos === "true",
       estado: estado || "Ingreso",
       diagnosticoDescripcion, // Agregar la descripción al crear
+      claveEquipo, // Agregar la clave del equipo
       fechaIngreso: new Date(), // Establece la fecha de ingreso como la fecha y hora actual
     });
 

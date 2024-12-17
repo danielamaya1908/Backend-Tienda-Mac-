@@ -31,9 +31,9 @@ const updateSoporteTecnico = async (req, res) => {
     const { id } = req.params;
     const {
       marca,
-      password,
       modelo,
       serial,
+      claveEquipo, // Add this line in the body
       userId,
       garantia,
       enciende,
@@ -61,9 +61,9 @@ const updateSoporteTecnico = async (req, res) => {
 
     await soporteTecnico.update({
       marca,
-      password,
       modelo,
       serial,
+      claveEquipo, // Add this line in the body
       userId,
       garantia,
       enciende,
@@ -133,9 +133,9 @@ const getAllSoportesTecnicos = async (req, res) => {
       attributes: [
         "id",
         "marca",
-        "password",
         "modelo",
         "serial",
+        "claveEquipo", // Add this line in the attributes array
         "userId",
         "garantia",
         "enciende",
@@ -196,7 +196,7 @@ const getAllSoportesTecnicos = async (req, res) => {
 
 const searchSoportesTecnicos = async (req, res) => {
   try {
-    const { id, nombre, fecha, serial, estado } = req.query;
+    const { id, nombre, fecha, serial, estado, claveEquipo } = req.query;
 
     const whereConditions = {};
 
@@ -225,9 +225,9 @@ const searchSoportesTecnicos = async (req, res) => {
       attributes: [
         "id",
         "marca",
-        "password",
         "modelo",
         "serial",
+        "claveEquipo", // Add this line in the attributes array
         "userId",
         "estado",
         "createdAt",
@@ -279,9 +279,9 @@ const getSoporteTecnicoById = async (req, res) => {
       attributes: [
         "id",
         "marca",
-        "password",
         "modelo",
         "serial",
+        "claveEquipo", // Add this line in the attributes array
         "userId",
         "garantia",
         "enciende",
