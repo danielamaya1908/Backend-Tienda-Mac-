@@ -31,6 +31,7 @@ const updateSoporteTecnico = async (req, res) => {
     const { id } = req.params;
     const {
       marca,
+      password,
       modelo,
       serial,
       userId,
@@ -60,6 +61,7 @@ const updateSoporteTecnico = async (req, res) => {
 
     await soporteTecnico.update({
       marca,
+      password,
       modelo,
       serial,
       userId,
@@ -131,6 +133,7 @@ const getAllSoportesTecnicos = async (req, res) => {
       attributes: [
         "id",
         "marca",
+        "password",
         "modelo",
         "serial",
         "userId",
@@ -222,6 +225,7 @@ const searchSoportesTecnicos = async (req, res) => {
       attributes: [
         "id",
         "marca",
+        "password",
         "modelo",
         "serial",
         "userId",
@@ -275,6 +279,7 @@ const getSoporteTecnicoById = async (req, res) => {
       attributes: [
         "id",
         "marca",
+        "password",
         "modelo",
         "serial",
         "userId",
