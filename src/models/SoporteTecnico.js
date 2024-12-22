@@ -110,10 +110,6 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    claveEquipo: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   });
 
   return SoporteTecnico;
