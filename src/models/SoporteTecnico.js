@@ -110,7 +110,7 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    claveEquipo: {
+    equpoL: {
       type: DataTypes.STRING,
       allowNull: false,
     },
