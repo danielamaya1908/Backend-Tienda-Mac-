@@ -19,6 +19,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    codigo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     garantia: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
