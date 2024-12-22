@@ -29,6 +29,7 @@ const postTechnicalSupport = async (req, res) => {
       marca,
       modelo,
       serial,
+      codigo,
       DocumentNumber,
       garantia,
       enciende,
@@ -53,9 +54,10 @@ const postTechnicalSupport = async (req, res) => {
     const files = req.files || [];
     console.log("Archivos subidos:", files);
 
-    if (!marca || !modelo || !serial || !DocumentNumber) {
+    if (!marca || !modelo || !serial || !codigo || !DocumentNumber) {
       return res.status(400).json({
-        error: "Marca, modelo, serial y DocumentNumber son campos requeridos",
+        error:
+          "Marca, modelo, serial, DocumentNumber y codigo son campos requeridos",
       });
     }
 
@@ -72,6 +74,7 @@ const postTechnicalSupport = async (req, res) => {
       marca,
       modelo,
       serial,
+      codigo,
       userId: user.id, // Utiliza el id del usuario encontrado
       garantia: garantia === "true",
       enciende: enciende === "true",
